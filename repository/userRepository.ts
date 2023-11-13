@@ -25,7 +25,7 @@ export class UserRepository{
     :Promise<Interfaces.IUserSignupReply|null >
     {
             const data = await pool.query('INSERT INTO usertable(user_id, name, email, user_password, salt) VALUES ($1, $2, $3, $4, $5) RETURNING *', [user_id, userName, userEmail, userPassword, salt]);
-            console.log(data.rows[0])
+            // console.log(data.rows[0])
             return  data.rows[0] || null;
     }
     

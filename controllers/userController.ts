@@ -14,7 +14,7 @@ class UserController{
         const info=await this.userRepository.userExist(userEmail);
         if(info)
         {
-            return info;
+            return reply.status(409).send(info);
         }
         else{
             try{
@@ -32,22 +32,6 @@ class UserController{
                 reply.status(500).send('Internal Server Error');
             }
         }
-        
-        // const user=await this.userRepository.signupUser(userName,userEmail,userPassword);
-        // if(!user)
-        // {
-        //     return reply.status(409).send("User already exist")
-        // }
-        // else{
-        //     try{
-                
-
-        //          return reply.status(201).send(user)
-        //     }
-        //     catch(e){
-        //       return  reply.status(500).send("Internal Server Error");
-        //     }
-        // }
 
     }
 
@@ -73,7 +57,7 @@ class UserController{
                     return reply.status(401).send("Wrong password");
                 }
         }catch(e){
-            console.error('Error during signin:', e);
+            // console.error('Error during signin:', e);
             reply.status(500).send("Internal Server Error");
         }
       }
