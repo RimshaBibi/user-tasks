@@ -36,8 +36,6 @@ class TaskSchema{
                 task_id: { type: 'string' },
                 title: { type: 'string' }, 
                 description: { type: 'string' }, 
-                
-               
               },
             },
           },

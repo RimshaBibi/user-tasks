@@ -17,7 +17,7 @@ export class TaskController{
       
       if(!user){
         //unauthorized user
-        return reply.status(401).send("user not exist")
+        return reply.status(404).send("user not exist")
       }
       else{
         const data=await this.taskRepository.addTask(task_id,title,description,user_id);
