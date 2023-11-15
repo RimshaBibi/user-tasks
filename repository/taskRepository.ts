@@ -7,13 +7,11 @@ import { Interfaces } from "models/userModel.js";
 export class TaskRepository{
 
     constructor(private db:Pool){}
-    async userExist( user_id:string):Promise<Interfaces.ISignInReply|null >{
+    async userExist( user_id:any):Promise<Interfaces.ISignInReply|null >{
     const data = await pool.query("SELECT * FROM usertable WHERE user_id = $1", [user_id]);
-    // console.log(data)
     //it means user exist
     if(data.rows.length!==0){
-        // console.log(data)
-        return data.rows[0] 
+        return  data.rows[0]
     }
     return null;
    }
@@ -71,6 +69,14 @@ export class TaskRepository{
     {
     await pool.query('DELETE FROM usertasks WHERE task_id = $1 ', [task_id]);
     return "Task deleted successfully"
+    }
+
+    async userTasks(user_id:string):Promise<TaskInterface.ITaskRep[]|null>{
+    const data=await pool.query('SELECT * FROM usertasks WHERE user_id = $1',[user_id])
+    if(data.rows.length!==0){
+        return data.rows
+    }
+    return null;
     }
     
 }

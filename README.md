@@ -10,9 +10,11 @@ Here, User is registerd and then can add,update,delete and get the tasks.
 - [Endpoints](#endpoints)
   - [UserRegisteration](#user-registration)
   - [UserAuthentication](#user-authentication)
+  - [RefreshToken](#refresh-token)
   - [AddingTask](#adding-task)
   - [GettingAllTasks](#getting-all-tasks)
   - [GettingOneTask](#getting-one-task)
+  - [GettingOneUserTask](#getting-one-user-task)
   - [UpdatingTask](#updating-task)
   - [DeletingTask](#deleting-task)
 - [Contributing](#contributing)
@@ -83,9 +85,25 @@ Before you begin, ensure you have the following dependencies installed:
     - 401 (Unauthorized): Wrong password.
     - 500 (Internal Server Error): Authentication failed due to an internal error.
 
+### REFRESH TOKEN
+- **POST /auth/refresh-token**
+  - Description: Generating new jwt token from the expire token.
+  - Request Body:
+    - `token` (string, required): Expire jwt token.
+    - `user_id` (string): Unique user identifier.
+    - `userEmail` (string, required, format: email): User's email address.
+  - Response:
+    - 201 (Created): New Jwt token generated successfully.
+      - `token` (string): New jwt token.
+    - 404 (Not Found): User does not exist.
+    - 401 (Unathorized): Invalid token.
+    - 500 (Internal Server Error): An internal server error occurred while processing the request.
+
 ### Adding Task
 - **POST /addTask**
-    - Description: Adding a task by the user.
+    - Description: Adding a task by the authenticated user.
+    - Request Headers:
+      - `authorization` (string) : Authorization token is provided here.
     - Request Body:
       - `task_id` (string) : Unique task identifier.
       - `title` (string) : Title of the task.
@@ -97,12 +115,14 @@ Before you begin, ensure you have the following dependencies installed:
       - `task_id` (string): Unique task identifier.
       - `title` (string): Title of the task.
       - `description` (string): Description of the task.
-    - 404 (Unauthorized): User does not exist.
+    - 404 (Not Found): User does not exist.
     - 500 (Internal Server Error): An internal server error occurred while processing the request.
 
 ### Getting All Tasks
 - **GET /getAllTasks**
-    - Description: Retrieve all tasks for all users.
+    - Description: Authenticated user retrieve all tasks for all users.
+    - Request Headers:
+      - `authorization` (string) : Authorization token is provided here.
     - Response:
     - 200 (OK): Successfull retrieval of the tasks.
       - Array of tasks, each with the following properties:
@@ -110,12 +130,14 @@ Before you begin, ensure you have the following dependencies installed:
         - `task_id` (string): Unique task identifier.
         - `title` (string): Title of the task.
         - `description` (string): Description of the task.
-    - 404 (Not Found): No task Found.
+    - 404 (Not Found): No user exist and No task Found.
     - 500 (Internal Server Error): An internal server error occurred while processing the request.
 
 ### Getting One Task 
 - **GET /getOneTask/:task_id**
-    - Description: Retrieve one task by Id.
+    - Description: Authenticated user retrieve one task by Id.
+    - Request Headers:
+      - `authorization` (string) : Authorization token is provided here.
      - URL Parameter:
       - `task_id` (string) : Unique task identifier.
     - Response:
@@ -124,12 +146,28 @@ Before you begin, ensure you have the following dependencies installed:
         - `task_id` (string): Unique task identifier.
         - `title` (string): Title of the task.
         - `description` (string): Description of the task.
-    - 404 (Not Found): No task Found.
+    - 401 (Unathorized): Unauthorized user.
+    - 404 (Not Found): No user exist and No task Found.
+    - 500 (Internal Server Error): An internal server error occurred while processing the request.
+
+### Getting One User Task 
+- **GET /getUserTasks**
+    - Description: Authenticated user retrieve all his task.
+    - Request Headers:
+      - `authorization` (string) : Authorization token is provided here.
+    - Response:
+    - 200 (OK): Successfull retrieval of the task.
+        - Array of tasks, each with the following properties:
+          - `user_id` (string): Unique user identifier.
+          - `task_id` (string): Unique task identifier.
+          - `title` (string): Title of the task.
+          - `description` (string): Description of the task.
+    - 404 (Not Found): No user exist and No task Found.
     - 500 (Internal Server Error): An internal server error occurred while processing the request.
 
 ### Updating Task 
 - **PUT /updateTask/:task_id**
-    - Description: Updating task by Id.
+    - Description: Authenticated user updating task by Id.
     - URL Parameter:
       - `task_id` (string) : Unique task identifier.
     - Request Body:
@@ -141,7 +179,8 @@ Before you begin, ensure you have the following dependencies installed:
         - `task_id` (string): Unique task identifier.
         - `title` (string): Title of the task.
         - `description` (string): Description of the task.
-    - 404 (Not Found): No task Found.
+    - 401 (Unathorized): Unauthorized user.
+    - 404 (Not Found): No user exist and No task Found.
     - 500 (Internal Server Error): An internal server error occurred while processing the request.
 
 ### Deleting Task 
@@ -152,8 +191,11 @@ Before you begin, ensure you have the following dependencies installed:
     - Response:
     - 200 (OK): Successfully deleting the task.
        - Response Body: A string indicating the success of the deletion.
-    - 404 (Not Found): No task Found.
+    - 401 (Unathorized): Unauthorized user.
+    - 404 (Not Found): No user exist and No task Found.
     - 500 (Internal Server Error): An internal server error occurred while processing the request.
+
+
     
 ### Contributing
 Contributions are welcome! Please follow these guidelines:

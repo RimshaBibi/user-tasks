@@ -6,9 +6,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const fastify_1 = __importDefault(require("fastify"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const routes_1 = __importDefault(require("./routes/routes"));
+const auth_middleware_1 = __importDefault(require("./middlewares/auth_middleware"));
 dotenv_1.default.config();
 const app = (0, fastify_1.default)({ logger: true });
 const PORT = parseInt(process.env.PORT || '8080');
+app.register(auth_middleware_1.default);
 app.register(routes_1.default.routes);
 app.listen({ port: PORT }, (err, address) => {
     if (err) {

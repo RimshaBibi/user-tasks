@@ -6,7 +6,8 @@ import {Interfaces,UserSchema} from '../models/userModel';
 import { TaskInterface,TaskSchema } from '../models/taskModel';
 import { TaskController } from '../controllers/taskController';
 import { TaskRepository } from '../repository/taskRepository';
-import { request } from 'http';
+import authMiddleware from '../middlewares/auth_middleware';
+
 
 
 class Routes{
@@ -20,7 +21,8 @@ class Routes{
     const userController = new UserController(userRepository);
     const taskRepository=new TaskRepository(db);
     const taskController= new TaskController(taskRepository);
-
+  
+    authMiddleware(fastify);
 
     fastify.post<{Body:Interfaces.IUserSignUpReq}>('/signup',UserSchema.postUserSignUpOptions, async (request, reply) => {
       // console.log(`the request data is ${request.body}`)
@@ -32,26 +34,36 @@ class Routes{
         return userController.signin(request,reply);
     })
 
-    fastify.post<{Body:TaskInterface.ITaskReq}>('/addTask',TaskSchema.postAddTaskOptions,async(request,reply)=>{
+    fastify.post<{Body:Interfaces.IRefreshReq}>('/auth/refresh-token',UserSchema.postRefreshTokenOptions, async (request, reply) => {
+      // console.log(`the request data is ${request.body}`)
+      return userController.refresh(request,reply);
+    })
+    
+    fastify.post<{Body:TaskInterface.ITaskReq}>('/addTask',{...TaskSchema.postAddTaskOptions,preHandler: fastify.authenticate},async(request,reply)=>{
      return taskController.addTasks(request,reply);
-
+    })
+    
+    fastify.get('/getAllTasks', { ...TaskSchema.getAllTasksOptions, preHandler: fastify.authenticate }, async(request,reply)=>{
+      return taskController.getAllTasks(request,reply);
+    })
+    
+    fastify.get<{Params:TaskInterface.ITaskByIdReq}>('/getOneTask/:task_id',{...TaskSchema.getTaskByIdOptions,preHandler: fastify.authenticate}, async(request,reply)=>{
+      return taskController.getOneTask(request,reply);
     })
 
-    fastify.get('/getAllTasks',TaskSchema.getAllTasksOptions, async(request,reply)=>{
-      return taskController.getAllTasks(reply);
-    })
-    fastify.get('/getOneTask/:task_id',TaskSchema.getTaskByIdOptions, async(request,reply)=>{
-      return taskController.getOneTask(request as FastifyRequest<{  Params: { task_id: string } }>,reply);
+    fastify.get('/getUserTasks',{...TaskSchema.getTaskByUserIdOptions,preHandler: fastify.authenticate},async(request,reply)=>{
+      // console.log((request as any).user.user_id)
+      return taskController.getUserTask(request,reply)
+     })
+
+    fastify.put<{Params:TaskInterface.ITaskByIdReq,Body:TaskInterface.ITaskBodyReq}>('/updateTask/:task_id',{...TaskSchema.putUpdateTaskOptions,preHandler: fastify.authenticate},async (request,reply)=>{
+      return taskController.updateTask(request,reply);
     })
 
-    fastify.put('/updateTask/:task_id',TaskSchema.putUpdateTaskOptions,async (request,reply)=>{
-      return taskController.updateTask(request as FastifyRequest<{ Params: { task_id: string }, Body: { title: string, description: string } }>,reply);
+    fastify.delete<{Params:TaskInterface.ITaskByIdReq}>('/deleteTask/:task_id',{...TaskSchema.deleteTaskByIdOptions,preHandler: fastify.authenticate},async(request,reply)=>{
+      return taskController.deleteTask(request,reply)
     })
-
-    fastify.delete('/deleteTask/:task_id',TaskSchema.deleteTaskByIdOptions,async(request,reply)=>{
-      return taskController.deleteTask(request as FastifyRequest<{ Params: { task_id: string } }>,reply)
-    })
-
+    
     done(); 
 }
 }

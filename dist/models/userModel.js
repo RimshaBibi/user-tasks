@@ -24,6 +24,7 @@ UserSchema.postUserSignUpOptions = {
                     email: { type: 'string' },
                     salt: { type: 'string' },
                     user_password: { type: 'string' },
+                    token: { type: 'string' }
                 },
             },
         },
@@ -46,7 +47,29 @@ UserSchema.postUserSignInOptions = {
                     user_id: { type: 'string' },
                     email: { type: 'string' },
                     user_password: { type: 'string' },
-                    salt: { type: 'string' }
+                    salt: { type: 'string' },
+                    token: { type: 'string' },
+                },
+            },
+        },
+    },
+};
+UserSchema.postRefreshTokenOptions = {
+    schema: {
+        body: {
+            type: 'object',
+            required: ['token', 'user_id', 'userEmail'],
+            properties: {
+                token: { type: 'string' },
+                user_id: { type: 'string', },
+                userEmail: { type: 'string', format: 'email' },
+            },
+        },
+        response: {
+            201: {
+                type: 'object',
+                properties: {
+                    token: { type: 'string' },
                 },
             },
         },

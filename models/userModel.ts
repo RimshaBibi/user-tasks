@@ -19,16 +19,16 @@ export interface IUserSignInReq {
   }
 
 export interface ISignInReply {
+    user_id:string,
     email:string,
     user_password:string
     salt:string
 }
 
-export interface Task {
-    task_id: string;
-    title: string;
-    description: string;
-    user_id: string;
+export interface IRefreshReq {
+    token: string;
+    user_id:string;
+    userEmail:string
   }
 }
 
@@ -54,7 +54,7 @@ class UserSchema{
             email: { type: 'string' }, 
             salt:{type:'string'},
             user_password: { type: 'string' }, 
-           
+            token : { type : 'string'}
           },
         },
       },
@@ -77,7 +77,30 @@ class UserSchema{
             user_id:{type:'string'},
             email: { type: 'string' }, 
             user_password: { type: 'string' }, 
-            salt:{type: 'string'}
+            salt:{type: 'string'},
+            token:{type:'string'},
+          },
+        },
+      },
+    },
+  };
+
+  static postRefreshTokenOptions = {
+    schema: {
+      body: {
+        type: 'object',
+        required: ['token', 'user_id', 'userEmail'],
+        properties: {
+          token: { type: 'string' },
+          user_id: { type: 'string', }, 
+          userEmail: { type: 'string', format: 'email'  }, 
+        },
+      },
+      response: {
+        201: {
+          type: 'object',
+          properties: {
+            token: { type: 'string' },
           },
         },
       },

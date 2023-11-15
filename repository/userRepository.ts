@@ -12,7 +12,11 @@ export class UserRepository{
     //it means user exist
     if(existingUser.rows.length!==0)
     { 
-        return "user exist";
+        // return "user exist";
+        return existingUser.rows[0] 
+    }
+    else {
+        return null
     }
    }
     async signupUser(

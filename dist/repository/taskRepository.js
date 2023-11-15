@@ -11,10 +11,8 @@ class TaskRepository {
     }
     async userExist(user_id) {
         const data = await database_js_1.default.query("SELECT * FROM usertable WHERE user_id = $1", [user_id]);
-        // console.log(data)
         //it means user exist
         if (data.rows.length !== 0) {
-            // console.log(data)
             return data.rows[0];
         }
         return null;
@@ -54,6 +52,13 @@ class TaskRepository {
     async deleteTask(task_id) {
         await database_js_1.default.query('DELETE FROM usertasks WHERE task_id = $1 ', [task_id]);
         return "Task deleted successfully";
+    }
+    async userTasks(user_id) {
+        const data = await database_js_1.default.query('SELECT * FROM usertasks WHERE user_id = $1', [user_id]);
+        if (data.rows.length !== 0) {
+            return data.rows;
+        }
+        return null;
     }
 }
 exports.TaskRepository = TaskRepository;

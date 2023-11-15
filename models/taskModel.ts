@@ -10,8 +10,15 @@ namespace TaskInterface{
     title:string,
     description:string
     }
-
-
+    export interface ITaskByIdReq{
+    task_id:string
+    }
+    export interface ITaskBodyReq{
+      task_id:string,
+      title: string, 
+      description: string
+      
+      }
 }
 
 class TaskSchema{
@@ -21,9 +28,8 @@ class TaskSchema{
         schema: {
           body: {
             type: 'object',
-            required: ['user_id', 'title', 'description'],
+            required: [ 'title', 'description'],
             properties: {
-                user_id: { type: 'string' },
                 title: { type: 'string', }, 
                 description: { type: 'string' }, 
             },
@@ -129,7 +135,21 @@ class TaskSchema{
             },
       }
   }
-    
+  static getTaskByUserIdOptions = {
+    schema:{
+        response: {
+            200: {
+              type: 'array',
+              properties: {
+                user_id: { type: 'string' },
+                task_id: { type: 'string' },
+                title: { type: 'string' }, 
+                description: { type: 'string' }, 
+              },
+            },
+          },
+    },
+}
 
 }
 export {TaskInterface,TaskSchema}

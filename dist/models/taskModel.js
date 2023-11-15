@@ -8,9 +8,8 @@ TaskSchema.postAddTaskOptions = {
     schema: {
         body: {
             type: 'object',
-            required: ['user_id', 'title', 'description'],
+            required: ['title', 'description'],
             properties: {
-                user_id: { type: 'string' },
                 title: { type: 'string', },
                 description: { type: 'string' },
             },
@@ -110,4 +109,19 @@ TaskSchema.deleteTaskByIdOptions = {
             },
         },
     }
+};
+TaskSchema.getTaskByUserIdOptions = {
+    schema: {
+        response: {
+            200: {
+                type: 'array',
+                properties: {
+                    user_id: { type: 'string' },
+                    task_id: { type: 'string' },
+                    title: { type: 'string' },
+                    description: { type: 'string' },
+                },
+            },
+        },
+    },
 };
