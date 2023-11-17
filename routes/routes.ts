@@ -43,7 +43,7 @@ class Routes{
      return taskController.addTasks(request,reply);
     })
     
-    fastify.get('/getAllTasks', { ...TaskSchema.getAllTasksOptions, preHandler: fastify.authenticate }, async(request,reply)=>{
+    fastify.get<{Querystring: TaskInterface.ITaskQueryReq}>('/getAllTasks', { ...TaskSchema.getAllTasksOptions, preHandler: fastify.authenticate }, async(request,reply)=>{
       return taskController.getAllTasks(request,reply);
     })
     
@@ -51,7 +51,7 @@ class Routes{
       return taskController.getOneTask(request,reply);
     })
 
-    fastify.get('/getUserTasks',{...TaskSchema.getTaskByUserIdOptions,preHandler: fastify.authenticate},async(request,reply)=>{
+    fastify.get<{Querystring: TaskInterface.ITaskQueryReq}>('/getUserTasks',{...TaskSchema.getTaskByUserIdOptions,preHandler: fastify.authenticate},async(request,reply)=>{
       // console.log((request as any).user.user_id)
       return taskController.getUserTask(request,reply)
      })

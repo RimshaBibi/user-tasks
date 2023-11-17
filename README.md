@@ -66,6 +66,8 @@ Before you begin, ensure you have the following dependencies installed:
       - `email` (string): User's email.
       - `salt` (string): Salt used for password hashing.
       - `user_password` (string): Hashed password.
+      - `status` (string): Status of account initially pending-approval.
+      - `createddate` (string): Date when account created.
     - 409 (Conflict): User with the provided email already exists.
     - 500 (Internal Server Error): Registration failed due to an internal error.
 
@@ -115,6 +117,7 @@ Before you begin, ensure you have the following dependencies installed:
       - `task_id` (string): Unique task identifier.
       - `title` (string): Title of the task.
       - `description` (string): Description of the task.
+      - `createddate` (string): Date when the task created.
     - 404 (Not Found): User does not exist.
     - 500 (Internal Server Error): An internal server error occurred while processing the request.
 
@@ -123,13 +126,19 @@ Before you begin, ensure you have the following dependencies installed:
     - Description: Authenticated user retrieve all tasks for all users.
     - Request Headers:
       - `authorization` (string) : Authorization token is provided here.
+    - Request Query:
+      - `page` (number) : Number of the page.
+      - `size` (number) : Number of the data shown.
     - Response:
-    - 200 (OK): Successfull retrieval of the tasks.
+    - 200 (OK): Successful retrieval of the tasks.
       - Array of tasks, each with the following properties:
         - `user_id` (string): Unique user identifier.
         - `task_id` (string): Unique task identifier.
         - `title` (string): Title of the task.
         - `description` (string): Description of the task.
+        - `createddate` (string): Date when task is created.
+        - `updateddate` (string): Date when task is updated.
+    - 400 (Invalid Request): Page and size are not available and page and size are not number.
     - 404 (Not Found): No user exist and No task Found.
     - 500 (Internal Server Error): An internal server error occurred while processing the request.
 
@@ -141,11 +150,13 @@ Before you begin, ensure you have the following dependencies installed:
      - URL Parameter:
       - `task_id` (string) : Unique task identifier.
     - Response:
-    - 200 (OK): Successfull retrieval of the task.
+    - 200 (OK): Successful retrieval of the task.
         - `user_id` (string): Unique user identifier.
         - `task_id` (string): Unique task identifier.
         - `title` (string): Title of the task.
         - `description` (string): Description of the task.
+        - `createddate` (string): Date when task is created.
+        - `updateddate` (string): Date when task is updated.
     - 401 (Unathorized): Unauthorized user.
     - 404 (Not Found): No user exist and No task Found.
     - 500 (Internal Server Error): An internal server error occurred while processing the request.
@@ -155,13 +166,19 @@ Before you begin, ensure you have the following dependencies installed:
     - Description: Authenticated user retrieve all his task.
     - Request Headers:
       - `authorization` (string) : Authorization token is provided here.
+    - Request Query:
+      - `page` (number) : Number of the page.
+      - `size` (number) : Number of the data shown.
     - Response:
-    - 200 (OK): Successfull retrieval of the task.
+    - 200 (OK): Successful retrieval of the tasks.
         - Array of tasks, each with the following properties:
           - `user_id` (string): Unique user identifier.
           - `task_id` (string): Unique task identifier.
           - `title` (string): Title of the task.
           - `description` (string): Description of the task.
+          - `createddate` (string): Date when task is created.
+          - `updateddate` (string): Date when task is updated.
+    - 400 (Invalid Request): Page and size are not available and page and size are not number.
     - 404 (Not Found): No user exist and No task Found.
     - 500 (Internal Server Error): An internal server error occurred while processing the request.
 
@@ -179,6 +196,8 @@ Before you begin, ensure you have the following dependencies installed:
         - `task_id` (string): Unique task identifier.
         - `title` (string): Title of the task.
         - `description` (string): Description of the task.
+        - `updateddate` (string): Date when task updated.
+    - 400 (Unathorized): Task id is required.   
     - 401 (Unathorized): Unauthorized user.
     - 404 (Not Found): No user exist and No task Found.
     - 500 (Internal Server Error): An internal server error occurred while processing the request.
@@ -191,6 +210,7 @@ Before you begin, ensure you have the following dependencies installed:
     - Response:
     - 200 (OK): Successfully deleting the task.
        - Response Body: A string indicating the success of the deletion.
+    - 400 (Unathorized): Task id is required.  
     - 401 (Unathorized): Unauthorized user.
     - 404 (Not Found): No user exist and No task Found.
     - 500 (Internal Server Error): An internal server error occurred while processing the request.

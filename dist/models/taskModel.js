@@ -22,6 +22,7 @@ TaskSchema.postAddTaskOptions = {
                     task_id: { type: 'string' },
                     title: { type: 'string' },
                     description: { type: 'string' },
+                    createddate: { type: 'string' }
                 },
             },
         },
@@ -29,6 +30,14 @@ TaskSchema.postAddTaskOptions = {
 };
 TaskSchema.getAllTasksOptions = {
     schema: {
+        Querystring: {
+            type: 'object',
+            required: ['page', 'size'],
+            properties: {
+                page: { type: 'integer' },
+                size: { type: 'integer' }
+            }
+        },
         response: {
             200: {
                 type: 'array',
@@ -37,6 +46,8 @@ TaskSchema.getAllTasksOptions = {
                     task_id: { type: 'string' },
                     title: { type: 'string' },
                     description: { type: 'string' },
+                    createddate: { type: 'string' },
+                    updateddate: { type: 'string' }
                 }
             }
         }
@@ -59,10 +70,37 @@ TaskSchema.getTaskByIdOptions = {
                     task_id: { type: 'string' },
                     title: { type: 'string' },
                     description: { type: 'string' },
+                    createddate: { type: 'string' },
+                    updateddate: { type: 'string' }
                 },
             },
         },
     }
+};
+TaskSchema.getTaskByUserIdOptions = {
+    schema: {
+        Querystring: {
+            type: 'object',
+            required: ['page', 'size'],
+            properties: {
+                page: { type: 'integer' },
+                size: { type: 'integer' }
+            }
+        },
+        response: {
+            200: {
+                type: 'array',
+                properties: {
+                    user_id: { type: 'string' },
+                    task_id: { type: 'string' },
+                    title: { type: 'string' },
+                    description: { type: 'string' },
+                    createddate: { type: 'string' },
+                    updateddate: { type: 'string' }
+                },
+            },
+        },
+    },
 };
 TaskSchema.putUpdateTaskOptions = {
     schema: {
@@ -88,7 +126,8 @@ TaskSchema.putUpdateTaskOptions = {
                     task_id: { type: 'string' },
                     title: { type: 'string' },
                     description: { type: 'string' },
-                    user_id: { type: 'string' }
+                    user_id: { type: 'string' },
+                    updateddate: { type: 'string' }
                 },
             },
         },
@@ -109,19 +148,4 @@ TaskSchema.deleteTaskByIdOptions = {
             },
         },
     }
-};
-TaskSchema.getTaskByUserIdOptions = {
-    schema: {
-        response: {
-            200: {
-                type: 'array',
-                properties: {
-                    user_id: { type: 'string' },
-                    task_id: { type: 'string' },
-                    title: { type: 'string' },
-                    description: { type: 'string' },
-                },
-            },
-        },
-    },
 };

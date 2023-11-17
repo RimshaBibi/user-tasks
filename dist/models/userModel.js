@@ -24,7 +24,9 @@ UserSchema.postUserSignUpOptions = {
                     email: { type: 'string' },
                     salt: { type: 'string' },
                     user_password: { type: 'string' },
-                    token: { type: 'string' }
+                    token: { type: 'string' },
+                    status: { type: 'string' },
+                    createddate: { type: 'string' }
                 },
             },
         },

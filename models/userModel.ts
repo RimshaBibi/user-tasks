@@ -1,39 +1,39 @@
-namespace Interfaces{
-export interface IUserSignUpReq {
+namespace Interfaces {
+  export interface IUserSignUpReq {
     userName: string;
-    userEmail:string;
+    userEmail: string;
     userPassword: string;
-}
+  }
 
-export interface IUserSignupReply {
+  export interface IUserSignupReply {
     user_id: string;
     name: string;
     email: string;
     user_password: string;
     salt: string;
-}
+  }
 
-export interface IUserSignInReq {
-    userEmail:string;
+  export interface IUserSignInReq {
+    userEmail: string;
     userPassword: string;
   }
 
-export interface ISignInReply {
-    user_id:string,
-    email:string,
-    user_password:string
-    salt:string
-}
+  export interface ISignInReply {
+    user_id: string,
+    email: string,
+    user_password: string
+    salt: string
+  }
 
-export interface IRefreshReq {
+  export interface IRefreshReq {
     token: string;
-    user_id:string;
-    userEmail:string
+    user_id: string;
+    userEmail: string
   }
 }
 
 
-class UserSchema{
+class UserSchema {
   static postUserSignUpOptions = {
     schema: {
       body: {
@@ -41,8 +41,8 @@ class UserSchema{
         required: ['userName', 'userEmail', 'userPassword'],
         properties: {
           userName: { type: 'string' },
-          userEmail: { type: 'string', format: 'email' }, 
-          userPassword: { type: 'string' }, 
+          userEmail: { type: 'string', format: 'email' },
+          userPassword: { type: 'string' },
         },
       },
       response: {
@@ -50,35 +50,37 @@ class UserSchema{
           type: 'object',
           properties: {
             user_id: { type: 'string' },
-            name: { type: 'string' }, 
-            email: { type: 'string' }, 
-            salt:{type:'string'},
-            user_password: { type: 'string' }, 
-            token : { type : 'string'}
+            name: { type: 'string' },
+            email: { type: 'string' },
+            salt: { type: 'string' },
+            user_password: { type: 'string' },
+            token: { type: 'string' },
+            status: { type: 'string' },
+            createddate: { type: 'string' }
           },
         },
       },
     },
   };
- static postUserSignInOptions = {
+  static postUserSignInOptions = {
     schema: {
       body: {
         type: 'object',
         required: ['userEmail', 'userPassword'],
         properties: {
-          userEmail: { type: 'string', format: 'email' }, 
-          userPassword: { type: 'string' }, 
+          userEmail: { type: 'string', format: 'email' },
+          userPassword: { type: 'string' },
         },
       },
       response: {
         200: {
           type: 'object',
           properties: {
-            user_id:{type:'string'},
-            email: { type: 'string' }, 
-            user_password: { type: 'string' }, 
-            salt:{type: 'string'},
-            token:{type:'string'},
+            user_id: { type: 'string' },
+            email: { type: 'string' },
+            user_password: { type: 'string' },
+            salt: { type: 'string' },
+            token: { type: 'string' },
           },
         },
       },
@@ -92,8 +94,8 @@ class UserSchema{
         required: ['token', 'user_id', 'userEmail'],
         properties: {
           token: { type: 'string' },
-          user_id: { type: 'string', }, 
-          userEmail: { type: 'string', format: 'email'  }, 
+          user_id: { type: 'string', },
+          userEmail: { type: 'string', format: 'email' },
         },
       },
       response: {
@@ -108,4 +110,4 @@ class UserSchema{
   };
 }
 
-export {Interfaces,UserSchema} ;
+export { Interfaces, UserSchema };

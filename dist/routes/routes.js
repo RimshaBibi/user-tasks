@@ -43,15 +43,15 @@ class Routes {
         fastify.get('/getOneTask/:task_id', Object.assign(Object.assign({}, taskModel_1.TaskSchema.getTaskByIdOptions), { preHandler: fastify.authenticate }), async (request, reply) => {
             return taskController.getOneTask(request, reply);
         });
+        fastify.get('/getUserTasks', Object.assign(Object.assign({}, taskModel_1.TaskSchema.getTaskByUserIdOptions), { preHandler: fastify.authenticate }), async (request, reply) => {
+            // console.log((request as any).user.user_id)
+            return taskController.getUserTask(request, reply);
+        });
         fastify.put('/updateTask/:task_id', Object.assign(Object.assign({}, taskModel_1.TaskSchema.putUpdateTaskOptions), { preHandler: fastify.authenticate }), async (request, reply) => {
             return taskController.updateTask(request, reply);
         });
         fastify.delete('/deleteTask/:task_id', Object.assign(Object.assign({}, taskModel_1.TaskSchema.deleteTaskByIdOptions), { preHandler: fastify.authenticate }), async (request, reply) => {
             return taskController.deleteTask(request, reply);
-        });
-        fastify.get('/getUserTasks', Object.assign(Object.assign({}, taskModel_1.TaskSchema.getTaskByUserIdOptions), { preHandler: fastify.authenticate }), async (request, reply) => {
-            // console.log((request as any).user.user_id)
-            return taskController.getUserTask(request, reply);
         });
         done();
     }

@@ -20,8 +20,9 @@ class UserRepository {
             return null;
         }
     }
-    async signupUser(userName, userEmail, userPassword, salt, user_id) {
-        const data = await database_js_1.default.query('INSERT INTO usertable(user_id, name, email, user_password, salt) VALUES ($1, $2, $3, $4, $5) RETURNING *', [user_id, userName, userEmail, userPassword, salt]);
+    async signupUser(userName, userEmail, userPassword, salt, user_id, createdDate, updatedDate) {
+        const status = 'pending-approval';
+        const data = await database_js_1.default.query('INSERT INTO usertable(user_id, name, email, user_password, salt , status, createdDate , updatedDate ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *', [user_id, userName, userEmail, userPassword, salt, status, createdDate, updatedDate]);
         // console.log(data.rows[0])
         return data.rows[0] || null;
     }

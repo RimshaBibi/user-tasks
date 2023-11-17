@@ -4,7 +4,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const crypto_1 = __importDefault(require("crypto"));
-const emailController_js_1 = require("./emailController.js");
 const uuid_1 = require("uuid");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 class UserController {
@@ -14,8 +13,8 @@ class UserController {
     async signup(request, reply) {
         const { userName, userEmail, userPassword } = request.body;
         const info = await this.userRepository.userExist(userEmail);
-        if (info) {
-            return reply.status(409).send(info);
+        if (info !== null) {
+            return reply.status(409).send("User already exist");
         }
         else {
             try {
@@ -23,11 +22,12 @@ class UserController {
                 // Hash the salt and password with 1000 iterations, 64 length, and sha512 digest 
                 const newPassword = crypto_1.default.pbkdf2Sync(userPassword, salt, 1000, 64, 'sha512').toString('hex');
                 const user_id = (0, uuid_1.v4)();
-                await emailController_js_1.EmailServices.sendEmail(userName, userEmail);
-                const user = await this.userRepository.signupUser(userName, userEmail, newPassword, salt, user_id);
+                //  await EmailServices.sendEmail(userName,userEmail)
+                const currentDate = new Date().toISOString().slice(0, 10);
+                const user = await this.userRepository.signupUser(userName, userEmail, newPassword, salt, user_id, currentDate, currentDate);
                 // console.log('User object:', user); 
                 const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
-                const token = jsonwebtoken_1.default.sign({ user_id: user === null || user === void 0 ? void 0 : user.user_id }, accessTokenSecret, { expiresIn: '7d' });
+                const token = jsonwebtoken_1.default.sign({ user_id: user === null || user === void 0 ? void 0 : user.user_id }, accessTokenSecret, { expiresIn: '15m' });
                 return reply.status(201).send(Object.assign(Object.assign({}, user), { token }));
             }
             catch (e) {
