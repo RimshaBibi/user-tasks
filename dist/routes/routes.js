@@ -11,6 +11,8 @@ const taskModel_1 = require("../models/taskModel");
 const taskController_1 = require("../controllers/taskController");
 const taskRepository_1 = require("../repository/taskRepository");
 const auth_middleware_1 = __importDefault(require("../middlewares/auth_middleware"));
+const fastify_multer_1 = __importDefault(require("fastify-multer"));
+const file_middleware_1 = __importDefault(require("../middlewares/file_middleware"));
 class Routes {
     static routes(fastify, opts, done) {
         // fastify.get('/', async (request, reply) => {
@@ -22,6 +24,7 @@ class Routes {
         const taskRepository = new taskRepository_1.TaskRepository(db);
         const taskController = new taskController_1.TaskController(taskRepository);
         (0, auth_middleware_1.default)(fastify);
+        fastify.register(fastify_multer_1.default.contentParser);
         fastify.post('/signup', userModel_1.UserSchema.postUserSignUpOptions, async (request, reply) => {
             // console.log(`the request data is ${request.body}`)
             return userController.signup(request, reply);
@@ -36,6 +39,12 @@ class Routes {
         });
         fastify.post('/addTask', Object.assign(Object.assign({}, taskModel_1.TaskSchema.postAddTaskOptions), { preHandler: fastify.authenticate }), async (request, reply) => {
             return taskController.addTasks(request, reply);
+        });
+        fastify.post('/upload/:task_id', Object.assign(Object.assign({}, taskModel_1.TaskSchema.postTaskFileByIdOptions), { preHandler: [file_middleware_1.default.uploadImage.single('file'), fastify.authenticate,] }), async (request, reply) => {
+            return taskController.uploadFile(request, reply);
+        });
+        fastify.get('/get_file/:task_id', Object.assign(Object.assign({}, taskModel_1.TaskSchema.getTaskFileByIdOptions), { preHandler: fastify.authenticate }), async (request, reply) => {
+            return taskController.getTaskFile(request, reply);
         });
         fastify.get('/getAllTasks', Object.assign(Object.assign({}, taskModel_1.TaskSchema.getAllTasksOptions), { preHandler: fastify.authenticate }), async (request, reply) => {
             return taskController.getAllTasks(request, reply);

@@ -13,12 +13,17 @@ CREATE TABLE usertable(
      updatedDate DATE
 );
 
+CREATE TYPE file_type_enum as ENUM ('application/pdf', 'image/png','image/jpeg', 'image/webp');
 
 CREATE TABLE usertasks(
      task_id UUID PRIMARY KEY,
      title VARCHAR(255),
      description VARCHAR(255),
      user_id UUID REFERENCES usertable(user_id),
+     file BYTEA,
+     filename VARCHAR(255),
+     file_path VARCHAR(255),
+     file_type file_type_enum,
      createdDate DATE,
      updatedDate DATE 
 );

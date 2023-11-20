@@ -13,10 +13,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@fastify/static": "^6.11.2",
+    "@fastify/multipart": "^8.0.0",
     "@fastify/swagger": "^6.1.1",
+    "@tsed/common": "^7.47.1",
     "@types/dotenv": "^8.2.0",
-    "@types/fastify-static": "^2.2.1",
     "@types/jsonwebtoken": "^9.0.5",
     "@types/node": "^20.8.3",
     "@types/nodemailer": "^6.4.11",
@@ -25,14 +25,18 @@
     "crypto": "^1.0.1",
     "dotenv": "^16.3.1",
     "fastify": "^4.0.0-rc.5",
-    "fastify-static": "^4.7.0",
+    "fastify-multer": "^2.0.3",
+    "fs": "^0.0.1-security",
     "jsonwebtoken": "^9.0.2",
+    "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.9.6",
     "nodemon": "^3.0.1",
+    "path": "^0.12.7",
     "pg": "^8.11.3",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
+    "@types/multer": "^1.4.10",
     "npm-run-all": "^4.1.5"
   }
 }

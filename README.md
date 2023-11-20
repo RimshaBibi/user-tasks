@@ -12,6 +12,8 @@ Here, User is registerd and then can add,update,delete and get the tasks.
   - [UserAuthentication](#user-authentication)
   - [RefreshToken](#refresh-token)
   - [AddingTask](#adding-task)
+  - [UploadingFile]()
+  - [GettingFile]()
   - [GettingAllTasks](#getting-all-tasks)
   - [GettingOneTask](#getting-one-task)
   - [GettingOneUserTask](#getting-one-user-task)
@@ -121,6 +123,41 @@ Before you begin, ensure you have the following dependencies installed:
     - 404 (Not Found): User does not exist.
     - 500 (Internal Server Error): An internal server error occurred while processing the request.
 
+  ### Uploading File
+- **POST /upload/:task_id**
+    - Description: Uploading task file by the authenticated user.
+    - Request Headers:
+      - `authorization` (string) : Authorization token is provided here.
+    - URL Parameter:
+      - `task_id` (string) : Unique task identifier.
+    - Request Body:
+      - `file` (file) : File as a form data with filedname `file`.
+    - Response:
+    - 201 (Created): File uploaded successfully.
+      - `Message` (string): File uploaded successfully `filename`.
+    - 401 (Unathorized): Unauthorized user.
+    - 400 (Invalid Request): No file is uploaded.
+    - 404 (Not Found): User does not exist and no task found.
+    - 500 (Internal Server Error): An internal server error occurred while processing the request.
+
+  ### Getting File
+- **Get /get_file/:task_id**
+    - Description: Retreiving task file by the authenticated user.
+    - Request Headers:
+      - `authorization` (string) : Authorization token is provided here.
+    - URL Parameter:
+      - `task_id` (string) : Unique task identifier.
+    - Response:
+    - 200 (OK): Successful retrieval of the file.
+      - `File` (file): File received from database.
+      - `Content-Type` (string): `file_type` received from database .
+      - `Content-Disposition` (string): `attachment, filename` received from database.
+    - 400 (Invalid request): Task id is required.
+    - 401 (Unathorized): Unauthorized user.
+    - 404 (Not Found): User does not exist and no task found and no file found.
+    - 500 (Internal Server Error): An internal server error occurred while processing the request.
+
+
 ### Getting All Tasks
 - **GET /getAllTasks**
     - Description: Authenticated user retrieve all tasks for all users.
@@ -157,6 +194,7 @@ Before you begin, ensure you have the following dependencies installed:
         - `description` (string): Description of the task.
         - `createddate` (string): Date when task is created.
         - `updateddate` (string): Date when task is updated.
+    - 400 (Invalid request): Task id is required.
     - 401 (Unathorized): Unauthorized user.
     - 404 (Not Found): No user exist and No task Found.
     - 500 (Internal Server Error): An internal server error occurred while processing the request.

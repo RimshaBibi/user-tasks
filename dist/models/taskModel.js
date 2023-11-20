@@ -28,6 +28,67 @@ TaskSchema.postAddTaskOptions = {
         },
     },
 };
+TaskSchema.postAddTaskFileOptions = {
+    schema: {
+        body: {
+            type: 'object',
+            required: ['title', 'description'],
+            properties: {
+                file: { type: 'string', format: 'binary' }
+            },
+        },
+        response: {
+            201: {
+                type: 'object',
+                properties: {
+                    user_id: { type: 'string' },
+                    task_id: { type: 'string' },
+                    title: { type: 'string' },
+                    description: { type: 'string' },
+                    file: { type: 'binary' },
+                    createddate: { type: 'string' },
+                },
+            },
+        },
+    },
+};
+TaskSchema.postTaskFileByIdOptions = {
+    schema: {
+        params: {
+            type: 'object',
+            required: ['task_id'],
+            properties: {
+                task_id: { type: 'string' }
+            }
+        },
+        response: {
+            201: {
+                type: 'string',
+            },
+        },
+    }
+};
+TaskSchema.getTaskFileByIdOptions = {
+    schema: {
+        params: {
+            type: 'object',
+            required: ['task_id'],
+            properties: {
+                task_id: { type: 'string' }
+            }
+        },
+        response: {
+            200: {
+                type: 'object',
+                properties: {
+                    file: { type: 'string', format: 'binary' },
+                    filename: { type: 'string' },
+                    file_type: { type: 'string' },
+                },
+            },
+        },
+    }
+};
 TaskSchema.getAllTasksOptions = {
     schema: {
         Querystring: {

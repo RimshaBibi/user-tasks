@@ -24,24 +24,43 @@ class TaskRepository {
         //    console.log( data.rows[0] )
         return data.rows[0] || null;
     }
+    //////////////////////////add files in the task ///////////////////////////
+    async addFiles(file, file_name, file_type, file_path, task_id) {
+        const data = await database_js_1.default.query('UPDATE usertasks SET file = $1, filename = $2, file_type =$3,  file_path = $4 WHERE task_id = $5 RETURNING *', [file, file_name, file_type, file_path, task_id]);
+        // console.log(data.rows[0])
+        return data.rows[0] || null;
+    }
+    async getFiles(task_id) {
+        const data = await database_js_1.default.query('SELECT user_id, file, filename, file_type FROM usertasks WHERE task_id  = $1', [task_id]);
+        if (!data) {
+            return null;
+        }
+        return data.rows[0];
+    }
     //////////////////////////get all tasks///////////////////////////////////////////
     // page the number of the page and size is how much data is shown 
     async getAllTasks(page, size) {
         //offset means how much data is skip
         const offset = (page - 1) * size;
-        const data = await database_js_1.default.query('SELECT * FROM usertasks ORDER BY updatedDate LIMIT $1 OFFSET $2', [size, offset]);
+        const data = await database_js_1.default.query('SELECT task_id, title, description, user_id, filename, file_type, createdDate, updatedDate  FROM usertasks ORDER BY updatedDate LIMIT $1 OFFSET $2', [size, offset]);
         // console.log(data.rows)
-        return data.rows || null;
+        if (data.rows.length !== 0) {
+            return data.rows;
+        }
+        return null;
     }
     ///////////////////////////// Get single task//////////////////////////
     async getOneTask(task_id) {
         const data = await database_js_1.default.query('SELECT * FROM usertasks where task_id = $1', [task_id]);
-        return data.rows[0] || null;
+        if (!data) {
+            return null;
+        }
+        return data.rows[0];
     }
     ///////////////////////// get one user task ///////////////////////////////////
     async userTasks(user_id, page, size) {
         const offset = (page - 1) * size;
-        const data = await database_js_1.default.query('SELECT * FROM usertasks WHERE user_id = $1 ORDER BY updatedDate LIMIT $2 OFFSET $3 ', [user_id, size, offset]);
+        const data = await database_js_1.default.query('SELECT task_id, title, description, user_id, filename, file_type, createdDate, updatedDate FROM usertasks WHERE user_id = $1 ORDER BY updatedDate LIMIT $2 OFFSET $3 ', [user_id, size, offset]);
         if (data.rows.length !== 0) {
             return data.rows;
         }
