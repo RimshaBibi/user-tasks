@@ -1,16 +1,12 @@
 "use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const pg_1 = require("pg");
-const dotenv_1 = __importDefault(require("dotenv"));
-dotenv_1.default.config();
+const config_1 = require("../config");
 const dbConfig = {
-    user: process.env.dbUser,
-    password: process.env.dbPassword,
-    host: process.env.host,
-    port: process.env.dbPort,
+    user: config_1.dbUser,
+    password: config_1.dbPassword,
+    host: config_1.host,
+    port: config_1.dbPort,
     database: 'userdatabase',
 };
 const pool = new pg_1.Pool(dbConfig);

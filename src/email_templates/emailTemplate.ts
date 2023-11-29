@@ -1,14 +1,15 @@
 import nodemailer from "nodemailer"
+import { sendingMail, mailPassword } from "../config"
 
-export class EmailServices{
+export class EmailServices {
 
-   static async sendEmail(userName:string,userEmail:string){
-    const transporter = nodemailer.createTransport({
-        service: 'Gmail',
-        auth: {
-        user: 'centralizeshopping@gmail.com',
-        pass: process.env.mailPassword
-         }
+    async sendEmail(userName: string, userEmail: string) {
+        const transporter = nodemailer.createTransport({
+            service: 'Gmail',
+            auth: {
+                user: sendingMail,
+                pass: mailPassword
+            }
         });
         const emailContent = `
             <html>
@@ -51,19 +52,19 @@ export class EmailServices{
                 </body>
             </html>
         `;
-        
-        
-             // Define email options
-             const mailOptions = {
-                 from: 'centralizeshopping@gmail.com',
-                 to: userEmail,
-                 subject: 'Welcome to Centralize Shopping',
-                 html: emailContent
-              };
-             
-                await transporter.sendMail(mailOptions);
-             
 
-   }
+
+        // Define email options
+        const mailOptions = {
+            from: sendingMail,
+            to: userEmail,
+            subject: 'Welcome to Centralize Shopping',
+            html: emailContent
+        };
+
+        await transporter.sendMail(mailOptions);
+
+
+    }
 
 }

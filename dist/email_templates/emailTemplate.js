@@ -5,13 +5,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.EmailServices = void 0;
 const nodemailer_1 = __importDefault(require("nodemailer"));
+const config_1 = require("../config");
 class EmailServices {
-    static async sendEmail(userName, userEmail) {
+    async sendEmail(userName, userEmail) {
         const transporter = nodemailer_1.default.createTransport({
             service: 'Gmail',
             auth: {
-                user: 'centralizeshopping@gmail.com',
-                pass: process.env.mailPassword
+                user: config_1.sendingMail,
+                pass: config_1.mailPassword
             }
         });
         const emailContent = `
@@ -57,7 +58,7 @@ class EmailServices {
         `;
         // Define email options
         const mailOptions = {
-            from: 'centralizeshopping@gmail.com',
+            from: config_1.sendingMail,
             to: userEmail,
             subject: 'Welcome to Centralize Shopping',
             html: emailContent

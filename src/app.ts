@@ -1,18 +1,16 @@
 import fastify, { FastifyInstance } from 'fastify';
-import dotenv from 'dotenv'
 import Routes from "./routes/routes"
 import authMiddleware from './middlewares/auth_middleware';
-dotenv.config()
-
+import { PORT } from "./config"
 
 const app: FastifyInstance = fastify({ logger: true });
 
 
-const PORT: number = parseInt(process.env.PORT || '8080');
+const PORTN: number = parseInt(PORT || '8080');
 app.register(authMiddleware)
 app.register(Routes.routes);
 
-app.listen({ port: PORT }, (err, address) => {
+app.listen({ port: PORTN }, (err, address) => {
   if (err) {
     console.error(err)
     process.exit(1)

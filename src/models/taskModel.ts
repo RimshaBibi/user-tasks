@@ -1,56 +1,8 @@
-namespace TaskInterface {
-  export interface ITaskReq {
-    user_id: string,
-    title: string,
-    description: string
-  }
-  export interface ITaskRep {
-    user_id: string,
-    task_id: string,
-    title: string,
-    description: string,
-    createddate: string,
-    updateddate: number
-    filename: string,
-    file_path: string
-  }
-  export interface ITaskFileAddRep {
-    user_id: string,
-    task_id: string,
-    title: string,
-    description: string,
-    createddate: string,
-    updateddate: number
-    filename: string,
-    file_path: string,
-    file: string
-  }
-  export interface ITaskByIdReq {
-    task_id: string
-  }
-
-  export interface ITaskFileRep {
-    user_id: string,
-    filename: string;
-    file_type: string;
-    file: Buffer;
-  }
-  export interface ITaskBodyReq {
-    task_id: string,
-    title: string,
-    description: string
-
-  }
-  export interface ITaskQueryReq {
-    page: number,
-    size: number
-  }
-}
-
-class TaskSchema {
 
 
-  static postAddTaskOptions = {
+export class TaskSchema {
+
+  postAddTaskOptions = {
     schema: {
       body: {
         type: 'object',
@@ -74,7 +26,7 @@ class TaskSchema {
       },
     },
   };
-  static postAddTaskFileOptions = {
+  postAddTaskFileOptions = {
     schema: {
       body: {
         type: 'object',
@@ -98,13 +50,13 @@ class TaskSchema {
       },
     },
   };
-  static postTaskFileByIdOptions = {
+  postTaskFileByIdOptions = {
     schema: {
       params: {
         type: 'object',
-        required: ['task_id'],
+        required: ['id'],
         properties: {
-          task_id: { type: 'string' }
+          id: { type: 'string' }
         }
       },
       response: {
@@ -114,13 +66,13 @@ class TaskSchema {
       },
     }
   }
-  static getTaskFileByIdOptions = {
+  getTaskFileByIdOptions = {
     schema: {
       params: {
         type: 'object',
-        required: ['task_id'],
+        required: ['id'],
         properties: {
-          task_id: { type: 'string' }
+          id: { type: 'string' }
         }
       },
       response: {
@@ -135,17 +87,28 @@ class TaskSchema {
       },
     }
   }
-
-  static getAllTasksOptions = {
+  delTaskFileByIdOptions = {
     schema: {
-      Querystring: {
+      params: {
         type: 'object',
-        required: ['page', 'size'],
+        required: ['id'],
         properties: {
-          page: { type: 'integer' },
-          size: { type: 'integer' }
+          id: { type: 'string' }
         }
       },
+      response: {
+        200: {
+          type: 'object',
+          properties: {
+            message: { type: 'string' },
+          },
+        },
+      },
+    }
+  }
+
+  getAllTasksOptions = {
+    schema: {
       response: {
         200: {
           type: 'array',
@@ -162,13 +125,13 @@ class TaskSchema {
     }
   }
 
-  static getTaskByIdOptions = {
+  getTaskByIdOptions = {
     schema: {
       params: {
         type: 'object',
-        required: ['task_id'],
+        required: ['id'],
         properties: {
-          task_id: { type: 'string' }
+          id: { type: 'string' }
         }
       },
       response: {
@@ -186,14 +149,13 @@ class TaskSchema {
       },
     }
   }
-  static getTaskByUserIdOptions = {
+  getMyTaskOptions = {
     schema: {
-      Querystring: {
+      querystring: {
         type: 'object',
-        required: ['page', 'size'],
         properties: {
           page: { type: 'integer' },
-          size: { type: 'integer' }
+          size: { type: 'integer' },
         }
       },
       response: {
@@ -212,14 +174,41 @@ class TaskSchema {
     },
   }
 
-  static putUpdateTaskOptions = {
+  getTaskByUserIdOptions = {
+    schema: {
+      querystring: {
+        type: 'object',
+        required: ['userId'],
+        properties: {
+          userId: { type: 'string' },
+          page: { type: 'integer' },
+          size: { type: 'integer' },
+        }
+      },
+      response: {
+        200: {
+          type: 'array',
+          properties: {
+            user_id: { type: 'string' },
+            task_id: { type: 'string' },
+            title: { type: 'string' },
+            description: { type: 'string' },
+            createddate: { type: 'string' },
+            updateddate: { type: 'string' }
+          },
+        },
+      },
+    },
+  }
+
+  putUpdateTaskOptions = {
     schema: {
       params: {
         type: 'object',
         properties: {
-          task_id: { type: 'string' },
+          id: { type: 'string' },
         },
-        required: ['task_id'],
+        required: ['id'],
       },
       body: {
         type: 'object',
@@ -244,13 +233,13 @@ class TaskSchema {
     },
   };
 
-  static deleteTaskByIdOptions = {
+  deleteTaskByIdOptions = {
     schema: {
       params: {
         type: 'object',
-        required: ['task_id'],
+        required: ['id'],
         properties: {
-          task_id: { type: 'string' }
+          id: { type: 'string' }
         }
       },
       response: {
@@ -263,4 +252,3 @@ class TaskSchema {
 
 
 }
-export { TaskInterface, TaskSchema }

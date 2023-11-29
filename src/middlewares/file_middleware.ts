@@ -7,28 +7,28 @@ declare module 'fastify' {
     }
 }
 export default class FileMiddleware {
-    static store = multer.diskStorage({
+    store = multer.diskStorage({
         destination: (req, file, cb) => {
-            cb(null, 'uploads/');
+            cb(null, 'assets/');
         },
         filename: (req, file, cb) => {
             cb(null, Date.now() + '-' + file.originalname);
         }
     });
     // Add file size limit (in bytes)
-    static fileSizeLimit = 5 * 1024 * 1024; // 5 MB
+    fileSizeLimit = 5 * 1024 * 1024; // 5 MB
 
     //  Multer middleware with file size limit
-    static uploadImage = multer({
-        storage: FileMiddleware.store,
-        limits: { fileSize: FileMiddleware.fileSizeLimit },
+    uploadImage = multer({
+        storage: this.store,
+        limits: { fileSize: this.fileSizeLimit },
         fileFilter: (req, file, cb) => {
             const allowedFileTypes = ['application/pdf', 'image/png', 'image/jpeg', 'image/webp'];
 
             if (!allowedFileTypes.includes(file.mimetype)) {
                 cb(new Error('Invalid file type'));
             }
-            else if (file.size! > FileMiddleware.fileSizeLimit) {
+            else if (file.size! > this.fileSizeLimit) {
                 cb(new Error('File size is greater than 5 MB'));
             }
             else {

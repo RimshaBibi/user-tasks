@@ -1,6 +1,5 @@
 import { Pool } from 'pg';
-import dotenv from "dotenv"
-dotenv.config()
+import { dbPassword, dbPort, dbUser, host } from '../config';
 
 
 type DatabaseConfig = {
@@ -13,10 +12,10 @@ type DatabaseConfig = {
 
 
 const dbConfig: DatabaseConfig = {
-  user:process.env.dbUser,
-  password: process.env.dbPassword,
-  host: process.env.host,
-  port:process.env.dbPort,
+  user: dbUser,
+  password: dbPassword,
+  host: host,
+  port: dbPort,
   database: 'userdatabase',
 };
 

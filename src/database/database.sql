@@ -2,7 +2,7 @@ CREATE DATABASE userdatabase;
 
 CREATE TYPE user_status AS ENUM ( 'pending-approval', 'active' , 'blocked');
 
-CREATE TABLE usertable(
+CREATE TABLE users(
      user_id UUID PRIMARY KEY,
      name VARCHAR(255),
      email VARCHAR(255),
@@ -15,7 +15,7 @@ CREATE TABLE usertable(
 
 CREATE TYPE file_type_enum as ENUM ('application/pdf', 'image/png','image/jpeg', 'image/webp');
 
-CREATE TABLE usertasks(
+CREATE TABLE tasks(
      task_id UUID PRIMARY KEY,
      title VARCHAR(255),
      description VARCHAR(255),
