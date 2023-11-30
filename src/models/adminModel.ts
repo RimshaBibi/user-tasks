@@ -1,5 +1,5 @@
-export class UserSchema {
-  postUserSignUpOptions = {
+export class ASchema {
+  postAddAdminOptions = {
     schema: {
       body: {
         type: 'object',
@@ -24,9 +24,9 @@ export class UserSchema {
           },
         },
       },
-    },
-  };
-  postUserSignInOptions = {
+    }
+  }
+  postAdminSignInOptions = {
     schema: {
       body: {
         type: 'object',
@@ -49,7 +49,7 @@ export class UserSchema {
     },
   };
 
-  postRefreshTokenOptions = {
+  postARefreshTokenOptions = {
     schema: {
       body: {
         type: 'object',
@@ -68,4 +68,49 @@ export class UserSchema {
       },
     },
   };
+
+
+  updateUserStatusOptions = {
+    schema: {
+      params: {
+        type: 'object',
+        required: ['id'],
+        properties: {
+          id: { type: 'string' },
+        },
+      },
+      body: {
+        type: 'object',
+        required: ['status'],
+        properties: {
+          status: { type: 'string' }
+        }
+      },
+      response: {
+        200: {
+          type: 'object',
+          properties: {
+            message: { type: 'string' }
+          },
+        },
+      },
+    },
+  };
+
+  deleteUserOptions = {
+    schema: {
+      params: {
+        type: 'object',
+        required: ['id'],
+        properties: {
+          id: { type: 'string' }
+        }
+      },
+      response: {
+        200: {
+          type: 'string',
+        },
+      },
+    }
+  }
 }

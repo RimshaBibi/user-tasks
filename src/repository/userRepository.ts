@@ -34,10 +34,11 @@ export class UserRepository {
         salt: string,
         user_id: string,
         createdDate: string,
-        updatedDate: string
+        updatedDate: string,
     ): Promise<Interfaces.IUserSignupReply | null> {
         const status = 'pending-approval';
-        const data = await pool.query('INSERT INTO users(user_id, name, email, user_password, salt , status, createdDate , updatedDate ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *', [user_id, userName, userEmail, userPassword, salt, status, createdDate, updatedDate]);
+        const role = 'user'
+        const data = await pool.query('INSERT INTO users(user_id, name, email, user_password, salt , status, createdDate , updatedDate, role ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *', [user_id, userName, userEmail, userPassword, salt, status, createdDate, updatedDate, role]);
         // console.log(data.rows[0])
         return data.rows[0] || null;
     }

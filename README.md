@@ -8,6 +8,11 @@ Here, User is registerd and then can add,update,delete and get the tasks.
   - [Prerequisites](#prerequisites)
 - [Usage](#usage)
 - [Endpoints](#endpoints)
+  - [AdminRegisteration](#admin-registration)
+  - [AdminAuthentication](#admin-authentication)
+  - [AdminRefreshToken](#admin-refresh-token)
+  - [UpdateStatus](#updating-user-status)
+  - [DeleteUser](#deleting-user)
   - [UserRegisteration](#user-registration)
   - [UserAuthentication](#user-authentication)
   - [RefreshToken](#refresh-token)
@@ -56,6 +61,82 @@ Before you begin, ensure you have the following dependencies installed:
    npm run start
 
 ## Endpoints
+
+### Admin Registration
+- **POST /adminSignup**
+  - Description: Register admin with a unique email.
+  - Request Body:
+    - `userName` (string, required): Admin's name.
+    - `userEmail` (string, required, format: email): Admin's email address.
+    - `userPassword` (string, required): Admin's password.
+  - Response:
+    - 201 (Created): Admin registration successful.
+      - `user_id` (string): Unique admin identifier.
+      - `name` (string): Admin's name.
+      - `email` (string): Admin's email.
+      - `token` (string): Admin's token.
+      - `status` (string): Status of account active.
+      - `createddate` (string): Date when account created.
+      - `role` (string): Role for admin is admin.
+    - 409 (Conflict): User with the provided email already exists.
+    - 500 (Internal Server Error): Registration failed due to an internal error.
+
+### Admin Authentication
+- **POST /adminSignin**
+  - Description: Authenticate admin.
+  - Request Body:
+    - `userEmail` (string, required, format: email): Admin's email address.
+    - `userPassword` (string, required): Admin's password.
+  - Response:
+    - 200 (OK): Admin authentication successful.
+      - `user_id` (string): Unique admin identifier.
+      - `email` (string): Admin's email.
+      - `token` (string): Admin's token.
+    - 404 (Unauthorized): User does not exist.
+    - 401 (Unauthorized): Wrong password.
+    - 500 (Internal Server Error): Authentication failed due to an internal error.
+
+### Admin Refresh Token
+- **POST /auth/admin-refresh-token**
+  - Description: Generating new jwt token from the expire token.
+  - Request Body:
+    - `token` (string, required): Expire jwt token.
+  - Response:
+    - 201 (Created): New Jwt token generated successfully.
+      - `token` (string): New jwt token.
+    - 200 (OK): Token is not expired yet.
+    - 404 (Not Found): Admin does not exist.
+    - 401 (Unathorized): Invalid token.
+    - 500 (Internal Server Error): An internal server error occurred while processing the request.
+
+### Updating User Status
+- **PUT /admin/:id**
+    - Description: Authenticated user updating task by Id.
+    - URL Parameter:
+      - `id` (string) : Unique user identifier.
+    - Request Body:
+      - `status` (string) : Status of the user.
+    - Response:
+    - 200 (OK): Successfully updating user's status.
+        - `message` (string): User's status updated successfully.
+    - 400 (Unathorized): User id is required.   
+    - 401 (Unathorized): Unauthorized user.
+    - 404 (Not Found): No admin exist and No user exist.
+    - 500 (Internal Server Error): An internal server error occurred while processing the request.
+
+### Deleting User
+- **DELETE /admin/:id**
+    - Description: Deleting user by Id.
+    - URL Parameter:
+      - `id` (string) : Unique task identifier.
+    - Response:
+    - 200 (OK): Successfully deleting the user.
+       - Response Body: A string indicating the success of the deletion.
+    - 400 (Unathorized): User id is required.  
+    - 401 (Unathorized): Unauthorized user.
+    - 404 (Not Found): No admin exist and No user exist.
+    - 500 (Internal Server Error): An internal server error occurred while processing the request.
+
 ### User Registration
 - **POST /signup**
   - Description: Register a new user with a unique email.
@@ -65,13 +146,13 @@ Before you begin, ensure you have the following dependencies installed:
     - `userPassword` (string, required): User's password.
   - Response:
     - 201 (Created): User registration successful.
-      - `user_id` (string): Unique user identifier.
+      - `user_id` (string): Unique admin identifier.
       - `name` (string): User's name.
       - `email` (string): User's email.
-      - `salt` (string): Salt used for password hashing.
-      - `user_password` (string): Hashed password.
+      - `token` (string): User's token.
       - `status` (string): Status of account initially pending-approval.
       - `createddate` (string): Date when account created.
+      - `role` (string): Role for user is user.
     - 409 (Conflict): User with the provided email already exists.
     - 500 (Internal Server Error): Registration failed due to an internal error.
 
@@ -85,13 +166,12 @@ Before you begin, ensure you have the following dependencies installed:
     - 200 (OK): User authentication successful.
       - `user_id` (string): Unique user identifier.
       - `email` (string): User's email.
-      - `user_password` (string): Hashed password.
-      - `salt` (string): Salt used for password hashing.
+      - `token` (string): User's token.
     - 404 (Unauthorized): User does not exist.
     - 401 (Unauthorized): Wrong password.
     - 500 (Internal Server Error): Authentication failed due to an internal error.
 
-### REFRESH TOKEN
+### Refresh Token
 - **POST /auth/refresh-token**
   - Description: Generating new jwt token from the expire token.
   - Request Body:
@@ -262,6 +342,7 @@ Before you begin, ensure you have the following dependencies installed:
     - 400 (Invalid Request):  Page and size are not number.
     - 404 (Not Found): No user exist and No task Found.
     - 500 (Internal Server Error): An internal server error occurred while processing the request.
+
 ### Updating Task 
 - **PUT /tasks/:id**
     - Description: Authenticated user updating task by Id.
@@ -284,7 +365,7 @@ Before you begin, ensure you have the following dependencies installed:
 
 ### Deleting Task 
 - **DELETE /tasks/:id**
-    - Description: Updating task by Id.
+    - Description: Deleting task by Id.
     - URL Parameter:
       - `id` (string) : Unique task identifier.
     - Response:

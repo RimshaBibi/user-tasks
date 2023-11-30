@@ -1,11 +1,10 @@
-export namespace Interfaces {
-  export interface IUserSignUpReq {
+export namespace AInterfaces {
+  export interface IAdminSignUpReq {
     userName: string;
     userEmail: string;
     userPassword: string;
   }
-
-  export interface IUserSignupReply {
+  export interface IAdminSignupReply {
     user_id: string;
     name: string;
     email: string;
@@ -14,18 +13,23 @@ export namespace Interfaces {
     role: string
   }
 
-  export interface IUserSignInReq {
+  export interface IAdminSignInReq {
     userEmail: string;
     userPassword: string;
   }
 
-  export interface ISignInReply {
+  export interface IAdminSignInReply {
     user_id: string,
     email: string,
     user_password: string
     salt: string
   }
-
+  export interface IAdminIdReq {
+    id: string;
+  }
+  export interface IAdminBodyReq {
+    status: string;
+  }
   export interface IRefreshReq {
     token: string
   }

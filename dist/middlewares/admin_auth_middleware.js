@@ -5,16 +5,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const config_1 = require("../config");
-async function authMiddleware(fastify) {
-    fastify.decorate('authenticate', async (request, reply) => {
+async function adminAuthMiddleware(fastify) {
+    fastify.decorate('adminAuth', async (request, reply) => {
         const authorization = request.headers['authorization'];
         if (!authorization) {
             return reply.status(401).send({ "message": "No token provided" });
         }
         const token = authorization.split(' ')[1];
         try {
-            const verified = jsonwebtoken_1.default.verify(token, config_1.ACCESS_TOKEN_SECRET);
-            request.user = verified;
+            const verified = jsonwebtoken_1.default.verify(token, config_1.ADMIN_ACCESS_TOKEN_SECRET);
+            request.admin = verified;
         }
         catch (e) {
             if (e instanceof jsonwebtoken_1.default.TokenExpiredError) {
@@ -27,7 +27,7 @@ async function authMiddleware(fastify) {
                 return reply.status(500).send(e);
             }
         }
-        // console.log((request as any).user.user_id);
+        //console.log((request as any).admin)
     });
 }
-exports.default = authMiddleware;
+exports.default = adminAuthMiddleware;

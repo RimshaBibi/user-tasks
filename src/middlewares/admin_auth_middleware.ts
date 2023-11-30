@@ -1,15 +1,15 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import jwt from 'jsonwebtoken';
-import { ACCESS_TOKEN_SECRET } from '../config';
+import { ADMIN_ACCESS_TOKEN_SECRET } from '../config';
 
 declare module 'fastify' {
   interface FastifyInstance {
-    authenticate: (request: FastifyRequest, reply: FastifyReply) => Promise<void>;
+    adminAuth: (request: FastifyRequest, reply: FastifyReply) => Promise<void>;
   }
 }
 
-export default async function authMiddleware(fastify: FastifyInstance) {
-  fastify.decorate('authenticate', async (request: FastifyRequest, reply: FastifyReply) => {
+export default async function adminAuthMiddleware(fastify: FastifyInstance) {
+  fastify.decorate('adminAuth', async (request: FastifyRequest, reply: FastifyReply) => {
 
     const authorization = request.headers['authorization'];
 
@@ -19,8 +19,8 @@ export default async function authMiddleware(fastify: FastifyInstance) {
 
     const token = authorization.split(' ')[1];
     try {
-      const verified = jwt.verify(token, ACCESS_TOKEN_SECRET);
-      (request as any).user = verified;
+      const verified = jwt.verify(token, ADMIN_ACCESS_TOKEN_SECRET);
+      (request as any).admin = verified;
     }
     catch (e) {
       if (e instanceof jwt.TokenExpiredError) {
@@ -34,9 +34,10 @@ export default async function authMiddleware(fastify: FastifyInstance) {
       }
 
     }
-    // console.log((request as any).user.user_id);
+    //console.log((request as any).admin)
 
   });
+
 }
 
 

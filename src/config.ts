@@ -6,6 +6,7 @@ const dbPassword: any = process.env.dbPassword
 const dbPort: any = process.env.dbPort
 const dbUser: any = process.env.dbUser
 const host: any = process.env.host
+const ADMIN_ACCESS_TOKEN_SECRET:any=process.env.ADMIN_ACCESS_TOKEN_SECRET
 const ACCESS_TOKEN_SECRET: any = process.env.ACCESS_TOKEN_SECRET
 const sendingMail: any = process.env.sendingMail
 const PORT: any = process.env.PORT
@@ -16,6 +17,7 @@ export {
     dbPort,
     dbUser,
     host,
+    ADMIN_ACCESS_TOKEN_SECRET,
     ACCESS_TOKEN_SECRET,
     sendingMail,
     PORT

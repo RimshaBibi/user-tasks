@@ -361,7 +361,7 @@ export class TaskController {
                 }
                 else {
                     const result = await this.taskRepository.deleteTask(id);
-                    return reply.status(200).send(result);
+                    return reply.status(200).send(JSON.stringify({ "message": result }));
                 }
             }
             catch (e) {

@@ -1,6 +1,7 @@
 CREATE DATABASE userdatabase;
 
 CREATE TYPE user_status AS ENUM ( 'pending-approval', 'active' , 'blocked');
+CREATE TYPE user_role AS ENUM ( 'user', 'admin');
 
 CREATE TABLE users(
      user_id UUID PRIMARY KEY,
@@ -9,9 +10,11 @@ CREATE TABLE users(
      user_password VARCHAR(255),
      salt VARCHAR(255),
      status user_status,
+     role user_role,
      createdDate DATE,
      updatedDate DATE
 );
+
 
 CREATE TYPE file_type_enum as ENUM ('application/pdf', 'image/png','image/jpeg', 'image/webp');
 

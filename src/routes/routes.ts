@@ -11,6 +11,11 @@ import { TaskRepository } from '../repository/taskRepository';
 import authMiddleware from '../middlewares/auth_middleware';
 import multer from 'fastify-multer';
 import FileMiddleware from '../middlewares/file_middleware';
+import { AdminController } from '../controllers/adminController';
+import { AdminRepository } from '../repository/adminRepository';
+import { AInterfaces } from '../interfaces/adminInterface';
+import { ASchema } from '../models/adminModel';
+import adminAuthMiddleware from '../middlewares/admin_auth_middleware';
 
 
 class Routes {
@@ -28,10 +33,49 @@ class Routes {
     const taskSchema = new TaskSchema()
     const fileMiddleware = new FileMiddleware()
 
+    const adminRepository = new AdminRepository(db)
+    const adminController = new AdminController(adminRepository)
+    const aSchema = new ASchema()
+
 
     authMiddleware(fastify);
+    adminAuthMiddleware(fastify)
+
 
     fastify.register(multer.contentParser);
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////// Admin Routes //////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /////////////////////////Admin Sign up ////////////////////
+    fastify.post<{ Body: AInterfaces.IAdminSignUpReq }>('/adminSignup', aSchema.postAddAdminOptions, async (request, reply) => {
+      return adminController.adminSignUp(request, reply)
+    })
+    /////////////////////////Admin Sign in ////////////////////
+    fastify.post<{ Body: AInterfaces.IAdminSignInReq }>('/adminSignin', aSchema.postAdminSignInOptions, async (request, reply) => {
+      return adminController.adminSignIn(request, reply)
+    })
+     /////////////////////////admin refresh token ////////////////////
+     fastify.post<{ Body: AInterfaces.IRefreshReq }>('/auth/admin-refresh-token', aSchema.postARefreshTokenOptions, async (request, reply) => {
+      // console.log(`the request data is ${request.body}`)
+      return adminController.refresh(request, reply);
+    })
+
+    /////////////////////////Admin Update Status ////////////////////
+    fastify.put<{ Params: AInterfaces.IAdminIdReq, Body: AInterfaces.IAdminBodyReq }>('/admin/:id', { ...aSchema.updateUserStatusOptions, preHandler: fastify.adminAuth }, async (request, reply) => {
+      return adminController.updateUserStatus(request, reply)
+    })
+
+    /////////////////////////Admin Delete User ////////////////////
+    fastify.delete<{ Params: AInterfaces.IAdminIdReq }>('/admin/:id', { ...aSchema.deleteUserOptions, preHandler: fastify.adminAuth }, async (request, reply) => {
+      return adminController.deleteUser(request, reply)
+    })
+   
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////// Users Routes //////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     ///////////////////////// Sign up ////////////////////
     fastify.post<{ Body: Interfaces.IUserSignUpReq }>('/signup', userSchema.postUserSignUpOptions, async (request, reply) => {

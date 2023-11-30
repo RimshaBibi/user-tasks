@@ -1,9 +1,9 @@
 import { FastifyRequest, FastifyReply } from 'fastify';
-import { UserRepository } from "../repository/userRepository.js";
+import { UserRepository } from 'src/repository/userRepository';
 import crypto from "crypto"
 import { v4 as uuid } from 'uuid';
-import jwt, { JwtPayload } from 'jsonwebtoken';
-import { ACCESS_TOKEN_SECRET } from "../config";
+import jwt from 'jsonwebtoken';
+import { ACCESS_TOKEN_SECRET } from '../config';
 
 
 class UserController {
@@ -37,7 +37,6 @@ class UserController {
         reply.status(500).send({ "message": 'Internal Server Error' });
       }
     }
-
   }
 
   async signin(request: FastifyRequest<{ Body: { userEmail: string; userPassword: string } }>, reply: FastifyReply) {

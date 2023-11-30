@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UserSchema = void 0;
-class UserSchema {
+exports.ASchema = void 0;
+class ASchema {
     constructor() {
-        this.postUserSignUpOptions = {
+        this.postAddAdminOptions = {
             schema: {
                 body: {
                     type: 'object',
@@ -28,9 +28,9 @@ class UserSchema {
                         },
                     },
                 },
-            },
+            }
         };
-        this.postUserSignInOptions = {
+        this.postAdminSignInOptions = {
             schema: {
                 body: {
                     type: 'object',
@@ -52,7 +52,7 @@ class UserSchema {
                 },
             },
         };
-        this.postRefreshTokenOptions = {
+        this.postARefreshTokenOptions = {
             schema: {
                 body: {
                     type: 'object',
@@ -71,6 +71,48 @@ class UserSchema {
                 },
             },
         };
+        this.updateUserStatusOptions = {
+            schema: {
+                params: {
+                    type: 'object',
+                    required: ['id'],
+                    properties: {
+                        id: { type: 'string' },
+                    },
+                },
+                body: {
+                    type: 'object',
+                    required: ['status'],
+                    properties: {
+                        status: { type: 'string' }
+                    }
+                },
+                response: {
+                    200: {
+                        type: 'object',
+                        properties: {
+                            message: { type: 'string' }
+                        },
+                    },
+                },
+            },
+        };
+        this.deleteUserOptions = {
+            schema: {
+                params: {
+                    type: 'object',
+                    required: ['id'],
+                    properties: {
+                        id: { type: 'string' }
+                    }
+                },
+                response: {
+                    200: {
+                        type: 'string',
+                    },
+                },
+            }
+        };
     }
 }
-exports.UserSchema = UserSchema;
+exports.ASchema = ASchema;
