@@ -24,16 +24,16 @@ class Routes {
     // fastify.get('/', async (request, reply) => {
     //     reply.send("route is active")
     //   });
-    const db = new Pool();
-    const userRepository = new UserRepository(db);
+
+    const userRepository = new UserRepository();
     const userController = new UserController(userRepository);
-    const taskRepository = new TaskRepository(db);
+    const taskRepository = new TaskRepository();
     const taskController = new TaskController(taskRepository);
     const userSchema = new UserSchema()
     const taskSchema = new TaskSchema()
     const fileMiddleware = new FileMiddleware()
 
-    const adminRepository = new AdminRepository(db)
+    const adminRepository = new AdminRepository()
     const adminController = new AdminController(adminRepository)
     const aSchema = new ASchema()
 
@@ -56,8 +56,8 @@ class Routes {
     fastify.post<{ Body: AInterfaces.IAdminSignInReq }>('/adminSignin', aSchema.postAdminSignInOptions, async (request, reply) => {
       return adminController.adminSignIn(request, reply)
     })
-     /////////////////////////admin refresh token ////////////////////
-     fastify.post<{ Body: AInterfaces.IRefreshReq }>('/auth/admin-refresh-token', aSchema.postARefreshTokenOptions, async (request, reply) => {
+    /////////////////////////admin refresh token ////////////////////
+    fastify.post<{ Body: AInterfaces.IRefreshReq }>('/auth/admin-refresh-token', aSchema.postARefreshTokenOptions, async (request, reply) => {
       // console.log(`the request data is ${request.body}`)
       return adminController.refresh(request, reply);
     })
@@ -71,7 +71,7 @@ class Routes {
     fastify.delete<{ Params: AInterfaces.IAdminIdReq }>('/admin/:id', { ...aSchema.deleteUserOptions, preHandler: fastify.adminAuth }, async (request, reply) => {
       return adminController.deleteUser(request, reply)
     })
-   
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////////// Users Routes //////////////////////////////////////////////////////////////
@@ -100,7 +100,7 @@ class Routes {
       return taskController.addTasks(request, reply);
     })
 
-    ///////////////////////// Upload file ////////////////////
+    /////////////////////// Upload file ////////////////////
     fastify.post<{ Params: TaskInterface.ITaskByIdReq }>('/upload/:id', { ...taskSchema.postTaskFileByIdOptions, preHandler: [fileMiddleware.uploadImage.single('file'), fastify.authenticate,] }, async (request, reply) => {
       return taskController.uploadFile(request, reply);
     })
@@ -110,7 +110,7 @@ class Routes {
       return taskController.getTaskFile(request, reply);
     })
 
-    ///////////////////////// Delete file ////////////////////
+    // ///////////////////////// Delete file ////////////////////
     fastify.put<{ Params: TaskInterface.ITaskByIdReq }>('/delete_file/:id', { ...taskSchema.delTaskFileByIdOptions, preHandler: fastify.authenticate }, async (request, reply) => {
       return taskController.deleteTaskFile(request, reply);
     })

@@ -4,7 +4,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const crypto_1 = __importDefault(require("crypto"));
-const uuid_1 = require("uuid");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const config_1 = require("../config");
 class UserController {
@@ -27,9 +26,7 @@ class UserController {
                 const salt = crypto_1.default.randomBytes(16).toString('hex');
                 // Hash the salt and password with 1000 iterations, 64 length, and sha512 digest 
                 const newPassword = crypto_1.default.pbkdf2Sync(userPassword, salt, 1000, 64, 'sha512').toString('hex');
-                const user_id = (0, uuid_1.v4)();
-                const currentDate = new Date().toISOString().slice(0, 10);
-                const user = await this.userRepository.signupUser(userName, userEmail.toLowerCase(), newPassword, salt, user_id, currentDate, currentDate);
+                const user = await this.userRepository.signupUser(userName, userEmail.toLowerCase(), newPassword, salt);
                 // console.log('User object:', user); 
                 const token = jsonwebtoken_1.default.sign({ user_id: user === null || user === void 0 ? void 0 : user.user_id }, config_1.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
                 return reply.status(201).send(Object.assign(Object.assign({}, user), { token }));
@@ -90,7 +87,7 @@ class UserController {
             }
             catch (e) {
                 if (e instanceof jsonwebtoken_1.default.TokenExpiredError) {
-                    console.log(request.user);
+                    // console.log((request as any).user)
                     const newToken = jsonwebtoken_1.default.sign({ user_id: user_id }, config_1.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
                     return reply.status(201).send({ token: newToken });
                 }
@@ -103,3 +100,4 @@ class UserController {
     }
 }
 exports.default = UserController;
+//# sourceMappingURL=userController.js.map

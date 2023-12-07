@@ -24,11 +24,24 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TaskController = void 0;
-const uuid_1 = require("uuid");
 const fs_1 = __importStar(require("fs"));
 class TaskController {
     constructor(taskRepository) {
         this.taskRepository = taskRepository;
+        this.fileTypeChange = (file_type) => {
+            if (file_type === "application_pdf") {
+                return 'application/pdf';
+            }
+            else if (file_type === "image_png") {
+                return 'image/png';
+            }
+            else if (file_type === "image_jpeg") {
+                return 'image/jpeg';
+            }
+            else {
+                return 'image/webp';
+            }
+        };
     }
     async deleteFile(filePath) {
         try {
@@ -61,9 +74,7 @@ class TaskController {
         }
         else {
             try {
-                const task_id = (0, uuid_1.v4)();
-                const currentDate = new Date().toISOString().slice(0, 10);
-                const data = await this.taskRepository.addTask(task_id, title, description, user_id, currentDate);
+                const data = await this.taskRepository.addTask(title, description, user_id);
                 //   console.log(data)
                 return reply.status(201).send(data);
             }
@@ -147,7 +158,7 @@ class TaskController {
             }
             try {
                 const result = await this.taskRepository.getFiles(id);
-                if (!result) {
+                if (!result || result.filename === null) {
                     return reply.status(404).send({ "message": "File not found" });
                 }
                 else if ((result === null || result === void 0 ? void 0 : result.user_id) !== user_id) {
@@ -155,8 +166,10 @@ class TaskController {
                 }
                 else {
                     const { file, filename, file_type } = result;
+                    const type = this.fileTypeChange(file_type);
+                    console.log(type);
                     // Set the response headers
-                    reply.header('Content-Type', file_type);
+                    reply.header('Content-Type', type);
                     reply.header('Content-Disposition', `attachment; filename=${filename}`);
                     // console.log(file, filename, file_type)
                     return reply.status(200).send(file);
@@ -216,7 +229,8 @@ class TaskController {
             }
             try {
                 const data = await this.taskRepository.getAllTasks(page, size); //page,//no of data shown
-                if (!data) {
+                // console.log(data)
+                if (!data || data.length === 0) {
                     return reply.status(404).send({ "message": "No Tasks Found" });
                 }
                 return reply.status(200).send(data);
@@ -268,7 +282,7 @@ class TaskController {
             }
             try {
                 const data = await this.taskRepository.userTasks(user_id, page, size);
-                if (!data) {
+                if (!data || data.length === 0) {
                     return reply.status(404).send({ "message": "No task Found" });
                 }
                 return reply.status(200).send(data);
@@ -298,7 +312,7 @@ class TaskController {
             }
             try {
                 const data = await this.taskRepository.userTasks(userId, page, size);
-                if (!data) {
+                if (!data || data.length === 0) {
                     return reply.status(404).send({ "message": "No task Found" });
                 }
                 return reply.status(200).send(data);
@@ -335,8 +349,7 @@ class TaskController {
                     return reply.status(401).send({ "message": "Unauthorized user" });
                 }
                 else {
-                    const currentDate = new Date().toISOString().slice(0, 10);
-                    const result = await this.taskRepository.updateTask(id, title, description, currentDate);
+                    const result = await this.taskRepository.updateTask(id, title, description);
                     return reply.status(200).send(result);
                 }
             }
@@ -376,3 +389,4 @@ class TaskController {
     }
 }
 exports.TaskController = TaskController;
+//# sourceMappingURL=taskController.js.map

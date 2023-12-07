@@ -21,7 +21,7 @@ class TaskSchema {
                             task_id: { type: 'string' },
                             title: { type: 'string' },
                             description: { type: 'string' },
-                            createddate: { type: 'string' }
+                            createdDate: { type: 'string' }
                         },
                     },
                 },
@@ -45,7 +45,7 @@ class TaskSchema {
                             title: { type: 'string' },
                             description: { type: 'string' },
                             file: { type: 'binary' },
-                            createddate: { type: 'string' },
+                            createdDate: { type: 'string' },
                         },
                     },
                 },
@@ -117,8 +117,8 @@ class TaskSchema {
                             task_id: { type: 'string' },
                             title: { type: 'string' },
                             description: { type: 'string' },
-                            createddate: { type: 'string' },
-                            updateddate: { type: 'string' }
+                            createdDate: { type: 'string' },
+                            updatedDate: { type: 'string' }
                         }
                     }
                 }
@@ -141,8 +141,8 @@ class TaskSchema {
                             task_id: { type: 'string' },
                             title: { type: 'string' },
                             description: { type: 'string' },
-                            createddate: { type: 'string' },
-                            updateddate: { type: 'string' }
+                            createdDate: { type: 'string' },
+                            updatedDate: { type: 'string' }
                         },
                     },
                 },
@@ -165,8 +165,8 @@ class TaskSchema {
                             task_id: { type: 'string' },
                             title: { type: 'string' },
                             description: { type: 'string' },
-                            createddate: { type: 'string' },
-                            updateddate: { type: 'string' }
+                            createdDate: { type: 'string' },
+                            updatedDate: { type: 'string' }
                         },
                     },
                 },
@@ -191,8 +191,8 @@ class TaskSchema {
                             task_id: { type: 'string' },
                             title: { type: 'string' },
                             description: { type: 'string' },
-                            createddate: { type: 'string' },
-                            updateddate: { type: 'string' }
+                            createdDate: { type: 'string' },
+                            updatedDate: { type: 'string' }
                         },
                     },
                 },
@@ -223,7 +223,7 @@ class TaskSchema {
                             title: { type: 'string' },
                             description: { type: 'string' },
                             user_id: { type: 'string' },
-                            updateddate: { type: 'string' }
+                            updatedDate: { type: 'string' }
                         },
                     },
                 },
@@ -248,3 +248,4 @@ class TaskSchema {
     }
 }
 exports.TaskSchema = TaskSchema;
+//# sourceMappingURL=taskModel.js.map

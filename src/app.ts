@@ -10,6 +10,8 @@ const PORTN: number = parseInt(PORT || '8080');
 app.register(authMiddleware)
 app.register(Routes.routes);
 
+
+
 app.listen({ port: PORTN }, (err, address) => {
   if (err) {
     console.error(err)

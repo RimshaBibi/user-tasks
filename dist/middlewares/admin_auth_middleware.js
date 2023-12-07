@@ -31,3 +31,4 @@ async function adminAuthMiddleware(fastify) {
     });
 }
 exports.default = adminAuthMiddleware;
+//# sourceMappingURL=admin_auth_middleware.js.map

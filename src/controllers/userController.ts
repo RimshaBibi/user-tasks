@@ -27,9 +27,7 @@ class UserController {
         const salt = crypto.randomBytes(16).toString('hex');
         // Hash the salt and password with 1000 iterations, 64 length, and sha512 digest 
         const newPassword = crypto.pbkdf2Sync(userPassword, salt, 1000, 64, 'sha512').toString('hex');
-        const user_id = uuid();
-        const currentDate = new Date().toISOString().slice(0, 10);
-        const user = await this.userRepository.signupUser(userName, userEmail.toLowerCase(), newPassword, salt, user_id, currentDate, currentDate)
+        const user = await this.userRepository.signupUser(userName, userEmail.toLowerCase(), newPassword, salt)
         // console.log('User object:', user); 
         const token = jwt.sign({ user_id: user?.user_id }, ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
         return reply.status(201).send({ ...user, token })
@@ -93,7 +91,7 @@ class UserController {
         return reply.status(200).send({ "message": "Token is not expired yet" })
       } catch (e) {
         if (e instanceof jwt.TokenExpiredError) {
-          console.log((request as any).user)
+          // console.log((request as any).user)
           const newToken = jwt.sign({ user_id: user_id }, ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
           return reply.status(201).send({ token: newToken });
         }

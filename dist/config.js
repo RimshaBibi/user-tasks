@@ -24,3 +24,4 @@ const sendingMail = process.env.sendingMail;
 exports.sendingMail = sendingMail;
 const PORT = process.env.PORT;
 exports.PORT = PORT;
+//# sourceMappingURL=config.js.map

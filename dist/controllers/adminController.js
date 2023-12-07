@@ -5,7 +5,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AdminController = void 0;
 const crypto_1 = __importDefault(require("crypto"));
-const uuid_1 = require("uuid");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const config_1 = require("../config");
 class AdminController {
@@ -29,18 +28,20 @@ class AdminController {
             return reply.status(400).send({ "message": "Password must contain at least 8 characters" });
         }
         else {
+            const data = await this.adminRepository.checkEmail(userEmail.toLowerCase());
+            if (data) {
+                return reply.status(409).send({ "message": "Admin already exist" });
+            }
             try {
                 const salt = crypto_1.default.randomBytes(16).toString('hex');
                 // Hash the salt and password with 1000 iterations, 64 length, and sha512 digest 
                 const newPassword = crypto_1.default.pbkdf2Sync(userPassword, salt, 1000, 64, 'sha512').toString('hex');
-                const user_id = (0, uuid_1.v4)();
-                const currentDate = new Date().toISOString().slice(0, 10);
-                const user = await this.adminRepository.adminSignUp(userName, userEmail.toLowerCase(), newPassword, salt, user_id, currentDate, currentDate);
+                const user = await this.adminRepository.adminSignUp(userName, userEmail.toLowerCase(), newPassword, salt);
                 const token = jsonwebtoken_1.default.sign({ admin_id: user === null || user === void 0 ? void 0 : user.user_id }, config_1.ADMIN_ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
                 return reply.status(201).send(Object.assign(Object.assign({}, user), { token }));
             }
             catch (e) {
-                return reply.status(500).send({ "message": e });
+                return reply.status(500).send({ "message": "Internal Server Error" });
             }
         }
     }
@@ -157,3 +158,4 @@ class AdminController {
     }
 }
 exports.AdminController = AdminController;
+//# sourceMappingURL=adminController.js.map

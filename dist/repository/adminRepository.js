@@ -4,38 +4,89 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AdminRepository = void 0;
-const database_1 = __importDefault(require("../database/database"));
+const prismaclient_1 = __importDefault(require("../prismaclient"));
 class AdminRepository {
-    constructor(db) {
-        this.db = db;
-    }
-    async adminSignUp(userName, userEmail, userPassword, salt, user_id, createdDate, updatedDate) {
+    async adminSignUp(userName, userEmail, userPassword, salt) {
         const status = 'active';
         const role = 'admin';
-        const data = await database_1.default.query('INSERT INTO users(user_id, name, email, user_password, salt , status, createdDate , updatedDate, role ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *', [user_id, userName, userEmail, userPassword, salt, status, createdDate, updatedDate, role]);
-        console.log(data.rows[0]);
-        return data.rows[0] || null;
+        const data = await prismaclient_1.default.users.create({
+            data: {
+                name: userName,
+                email: userEmail,
+                user_password: userPassword,
+                salt: salt,
+                status: status,
+                role: role
+            }
+        });
+        return data || null;
     }
     async adminSignIn(userEmail) {
-        const data = await database_1.default.query("SELECT * FROM users WHERE email= $1", [userEmail]);
-        // console.log(data.rows[0])
-        return data.rows[0] || null;
+        const data = await prismaclient_1.default.users.findUnique({
+            where: {
+                email: userEmail
+            }
+        });
+        //it means user exist
+        if (data) {
+            return data;
+        }
+        return null;
     }
     async checkUser(user_id) {
-        const data = await database_1.default.query("SELECT * FROM users WHERE user_id = $1", [user_id]);
+        const data = await prismaclient_1.default.users.findUnique({
+            where: {
+                user_id: user_id
+            }
+        });
         //it means user exist
-        if (data.rows.length !== 0) {
-            return data.rows[0];
+        if (data) {
+            return data;
+        }
+        return null;
+    }
+    async checkEmail(userEmail) {
+        const data = await prismaclient_1.default.users.findUnique({
+            where: {
+                email: userEmail
+            }
+        });
+        //it means user exist
+        if (data) {
+            return data;
         }
         return null;
     }
     async updateUserStatus(status, user_id) {
-        await database_1.default.query("UPDATE users SET status=$1 WHERE user_id=$2", [status, user_id]);
-        return "User's Status Updated Successfully";
+        if (status === "active") {
+            await prismaclient_1.default.users.update({
+                where: { user_id: user_id },
+                data: {
+                    status: "active"
+                }
+            });
+        }
+        else if (status === "blocked") {
+            await prismaclient_1.default.users.update({
+                where: { user_id: user_id },
+                data: {
+                    status: "blocked"
+                }
+            });
+        }
+        else {
+            return "User's Status does not updated. Status = pending_approval";
+        }
+        return `User's Status Updated Successfully. Staus = ${status}`;
     }
     async deleteUser(user_id) {
-        await database_1.default.query('DELETE from users WHERE user_id=$1', [user_id]);
+        await prismaclient_1.default.users.delete({
+            where: {
+                user_id: user_id
+            }
+        });
         return "User Deleted Successfully";
     }
 }
 exports.AdminRepository = AdminRepository;
+//# sourceMappingURL=adminRepository.js.map

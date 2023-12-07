@@ -31,3 +31,4 @@ async function authMiddleware(fastify) {
     });
 }
 exports.default = authMiddleware;
+//# sourceMappingURL=auth_middleware.js.map

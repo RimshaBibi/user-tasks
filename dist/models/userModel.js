@@ -74,3 +74,4 @@ class UserSchema {
     }
 }
 exports.UserSchema = UserSchema;
+//# sourceMappingURL=userModel.js.map

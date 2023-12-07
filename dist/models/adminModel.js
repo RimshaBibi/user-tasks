@@ -116,3 +116,4 @@ class ASchema {
     }
 }
 exports.ASchema = ASchema;
+//# sourceMappingURL=adminModel.js.map

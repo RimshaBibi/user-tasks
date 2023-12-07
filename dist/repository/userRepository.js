@@ -4,44 +4,55 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserRepository = void 0;
-const database_js_1 = __importDefault(require("../database/database.js"));
+const prismaclient_1 = __importDefault(require("../prismaclient"));
 class UserRepository {
-    constructor(db) {
-        this.db = db;
-    }
     async userExist(userEmail) {
-        const existingUser = await database_js_1.default.query("SELECT * FROM users WHERE email = $1", [userEmail]);
+        const data = await prismaclient_1.default.users.findUnique({
+            where: {
+                email: userEmail
+            }
+        });
         //it means user exist
-        if (existingUser.rows.length !== 0) {
-            // return "user exist";
-            return existingUser.rows[0];
+        if (data) {
+            return data;
         }
-        else {
-            return null;
-        }
+        return null;
     }
     async userCheck(user_id) {
-        const existingUser = await database_js_1.default.query("SELECT * FROM users WHERE user_id = $1", [user_id]);
+        const data = await prismaclient_1.default.users.findUnique({
+            where: {
+                user_id: user_id
+            }
+        });
         //it means user exist
-        if (existingUser.rows.length !== 0) {
-            // return "user exist";
-            return existingUser.rows[0];
+        if (data) {
+            return data;
         }
-        else {
-            return null;
-        }
+        return null;
     }
-    async signupUser(userName, userEmail, userPassword, salt, user_id, createdDate, updatedDate) {
-        const status = 'pending-approval';
+    async signupUser(userName, userEmail, userPassword, salt) {
+        const status = 'pending_approval';
         const role = 'user';
-        const data = await database_js_1.default.query('INSERT INTO users(user_id, name, email, user_password, salt , status, createdDate , updatedDate, role ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *', [user_id, userName, userEmail, userPassword, salt, status, createdDate, updatedDate, role]);
-        // console.log(data.rows[0])
-        return data.rows[0] || null;
+        const data = await prismaclient_1.default.users.create({
+            data: {
+                name: userName,
+                email: userEmail,
+                user_password: userPassword,
+                salt: salt,
+                status: status,
+                role: role
+            }
+        });
+        return data || null;
     }
     async signinUser(userEmail) {
-        const data = await database_js_1.default.query("SELECT * FROM users WHERE email= $1", [userEmail]);
-        // console.log(data.rows[0])
-        return data.rows[0] || null;
+        const data = await prismaclient_1.default.users.findUnique({
+            where: {
+                email: userEmail
+            }
+        });
+        return data || null;
     }
 }
 exports.UserRepository = UserRepository;
+//# sourceMappingURL=userRepository.js.map

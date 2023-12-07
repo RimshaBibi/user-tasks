@@ -5,7 +5,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const userController_1 = __importDefault(require("../controllers/userController"));
 const userRepository_1 = require("../repository/userRepository");
-const pg_1 = require("pg");
 const userModel_1 = require("../models/userModel");
 const taskModel_1 = require("../models/taskModel");
 const taskController_1 = require("../controllers/taskController");
@@ -22,15 +21,14 @@ class Routes {
         // fastify.get('/', async (request, reply) => {
         //     reply.send("route is active")
         //   });
-        const db = new pg_1.Pool();
-        const userRepository = new userRepository_1.UserRepository(db);
+        const userRepository = new userRepository_1.UserRepository();
         const userController = new userController_1.default(userRepository);
-        const taskRepository = new taskRepository_1.TaskRepository(db);
+        const taskRepository = new taskRepository_1.TaskRepository();
         const taskController = new taskController_1.TaskController(taskRepository);
         const userSchema = new userModel_1.UserSchema();
         const taskSchema = new taskModel_1.TaskSchema();
         const fileMiddleware = new file_middleware_1.default();
-        const adminRepository = new adminRepository_1.AdminRepository(db);
+        const adminRepository = new adminRepository_1.AdminRepository();
         const adminController = new adminController_1.AdminController(adminRepository);
         const aSchema = new adminModel_1.ASchema();
         (0, auth_middleware_1.default)(fastify);
@@ -82,7 +80,7 @@ class Routes {
         fastify.post('/tasks', Object.assign(Object.assign({}, taskSchema.postAddTaskOptions), { preHandler: fastify.authenticate }), async (request, reply) => {
             return taskController.addTasks(request, reply);
         });
-        ///////////////////////// Upload file ////////////////////
+        /////////////////////// Upload file ////////////////////
         fastify.post('/upload/:id', Object.assign(Object.assign({}, taskSchema.postTaskFileByIdOptions), { preHandler: [fileMiddleware.uploadImage.single('file'), fastify.authenticate,] }), async (request, reply) => {
             return taskController.uploadFile(request, reply);
         });
@@ -90,7 +88,7 @@ class Routes {
         fastify.get('/get_file/:id', Object.assign(Object.assign({}, taskSchema.getTaskFileByIdOptions), { preHandler: fastify.authenticate }), async (request, reply) => {
             return taskController.getTaskFile(request, reply);
         });
-        ///////////////////////// Delete file ////////////////////
+        // ///////////////////////// Delete file ////////////////////
         fastify.put('/delete_file/:id', Object.assign(Object.assign({}, taskSchema.delTaskFileByIdOptions), { preHandler: fastify.authenticate }), async (request, reply) => {
             return taskController.deleteTaskFile(request, reply);
         });
@@ -123,3 +121,4 @@ class Routes {
     }
 }
 exports.default = Routes;
+//# sourceMappingURL=routes.js.map

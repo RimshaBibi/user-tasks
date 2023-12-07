@@ -28,17 +28,20 @@ export class AdminController {
       return reply.status(400).send({ "message": "Password must contain at least 8 characters" });
     }
     else {
+      const data = await this.adminRepository.checkEmail(userEmail.toLowerCase())
+
+      if (data) {
+        return reply.status(409).send({ "message": "Admin already exist" })
+      }
       try {
         const salt = crypto.randomBytes(16).toString('hex');
         // Hash the salt and password with 1000 iterations, 64 length, and sha512 digest 
         const newPassword = crypto.pbkdf2Sync(userPassword, salt, 1000, 64, 'sha512').toString('hex');
-        const user_id = uuid();
-        const currentDate = new Date().toISOString().slice(0, 10);
-        const user = await this.adminRepository.adminSignUp(userName, userEmail.toLowerCase(), newPassword, salt, user_id, currentDate, currentDate)
+        const user = await this.adminRepository.adminSignUp(userName, userEmail.toLowerCase(), newPassword, salt)
         const token = jwt.sign({ admin_id: user?.user_id }, ADMIN_ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
         return reply.status(201).send({ ...user, token })
       } catch (e) {
-        return reply.status(500).send({ "message": e });
+        return reply.status(500).send({ "message": "Internal Server Error" });
       }
     }
   }
@@ -46,7 +49,6 @@ export class AdminController {
   async adminSignIn(request: FastifyRequest<{ Body: { userEmail: string; userPassword: string } }>, reply: FastifyReply) {
     const { userEmail, userPassword } = request.body;
     const user = await this.adminRepository.adminSignIn(userEmail.toLowerCase());
-
     if (!userPassword.trim()) {
       return reply.status(400).send({ "message": "User password is required" });
     }

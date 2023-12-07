@@ -36,3 +36,4 @@ class FileMiddleware {
     }
 }
 exports.default = FileMiddleware;
+//# sourceMappingURL=file_middleware.js.map
